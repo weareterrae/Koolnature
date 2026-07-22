@@ -13,10 +13,11 @@ export default {
       "processo": "Pirólise lenta com energia solar e recuperação de calor",
       "carbonoFixo": "+94%",
       "formatos": [
-        "15 dm³ (≈5 kg trad.)",
-        "30 dm³ (≈10 kg trad.)",
-        "60 dm³ (≈20 kg trad.)"
+        "15 dm³ = 2,5 kg (rende como ≈5 kg de carvão tradicional)",
+        "30 dm³ = 5 kg (≈10 kg trad.)",
+        "60 dm³ = 9 kg (≈20 kg trad.)"
       ],
+      "impactoPorSaco": "Rácio de produção 5:1 — cada tonelada de biocarvão retira 5 t de acácia invasora da floresta. Por saco: 12,5 kg de acácia (15 dm³), 25 kg (30 dm³), 45 kg (60 dm³).",
       "vantagens": [
         "Maior poder calorífico (usa menos 20–30%)",
         "Acende em 15–20 min",
@@ -279,11 +280,11 @@ export default {
   "quantidadeCarvao": [
     {
       "pessoas": "2–4",
-      "quantidade": "~1,5 kg (meio saco de 15 dm³)"
+      "quantidade": "~1,25 kg (meio saco de 15 dm³)"
     },
     {
       "pessoas": "5–8",
-      "quantidade": "~3 kg (um saco de 15 dm³)"
+      "quantidade": "~2,5 kg (um saco de 15 dm³)"
     },
     {
       "pessoas": "9–15",
@@ -291,7 +292,7 @@ export default {
     },
     {
       "pessoas": "15+",
-      "quantidade": "8–10 kg (saco de 60 dm³)"
+      "quantidade": "~9 kg (um saco de 60 dm³)"
     },
     {
       "nota": "Para grelhadas longas juntar ~30% ou usar briquetes. EKOOLOGY rende mais 20–30% que carvão tradicional."
