@@ -1,0 +1,29 @@
+# --- Rotas do site antigo (mapa conceptual; ver relatório — confirmar no Search Console) ---
+/somos-kool            /empresa.html        301
+/somos-kool/*          /empresa.html        301
+/sustentabilidade      /impacto.html        301
+/sustentabilidade/*    /impacto.html        301
+/como-utilizar         /manual.html         301
+/como-utilizar/*       /manual.html         301
+/o-biocarvao           /biocarvao.html      301
+/o-biocarvao/*         /biocarvao.html      301
+/bio-carvao            /biocarvao.html      301
+/bio-carvao/*          /biocarvao.html      301
+/biochar               /biocarvao.html      301
+/produto/*             /produtos.html       301
+/loja                  /produtos.html       301
+/loja/*                /produtos.html       301
+/shop/*                /produtos.html       301
+/contacto              /contactos.html      301
+/contacto/*            /contactos.html      301
+/home                  /                    301
+# --- Versões inglesas antigas ---
+/en/about              /en/empresa.html     301
+/en/about/*            /en/empresa.html     301
+/en/sustainability     /en/impacto.html     301
+/en/sustainability/*   /en/impacto.html     301
+/en/how-to-use         /en/manual.html      301
+/en/how-to-use/*       /en/manual.html      301
+/en/contact            /en/contactos.html   301
+/en/contact/*          /en/contactos.html   301
+/en/shop/*             /en/produtos.html    301

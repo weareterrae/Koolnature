@@ -945,3 +945,11 @@ footer .wrap, footer .base { position: relative; z-index: 1; }
   .mood { background-attachment: scroll; }
   .btn:hover, .card:hover, .receita:hover, .num:hover { transform: none; }
 }
+
+/* ---------- Aviso de cookies ---------- */
+#kn-cookies { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 9000; background: #fff; border: 1px solid #dfe5f0; border-radius: 14px; box-shadow: 0 10px 30px rgba(9,20,60,.18); padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; max-width: 720px; margin: 0 auto; }
+#kn-cookies p { margin: 0; font-size: 13.5px; color: #33405c; }
+#kn-cookies a { color: #00379E; }
+#kn-cookies button { border: 1px solid #c9d3e6; background: #fff; color: #33405c; font: 600 13.5px "Archivo", sans-serif; padding: 9px 18px; border-radius: 999px; cursor: pointer; margin-left: 8px; }
+#kn-cookies button.sim { background: #00379E; border-color: #00379E; color: #fff; }
+#kn-cookies button:focus-visible { outline: 3px solid #F25C1B; outline-offset: 2px; }

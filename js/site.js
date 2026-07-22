@@ -190,12 +190,46 @@
   });
 })();
 
-/* ---------- Tracking do Metricool (liga as visitas do site à conta EKOOLOGY) ---------- */
+/* ---------- Consentimento de cookies + Tracking do Metricool ----------
+   O tracker (cookie analítico) só carrega depois de a pessoa aceitar.
+   Escolha guardada em localStorage kn-consent: 'sim' | 'nao'. "knCookies()" reabre o aviso. */
 (function () {
-  function loadScript(a) {
-    var b = document.getElementsByTagName("head")[0], c = document.createElement("script");
-    c.type = "text/javascript"; c.src = "https://tracker.metricool.com/resources/be.js";
-    c.onreadystatechange = a; c.onload = a; b.appendChild(c);
+  var EN = document.documentElement.lang === 'en' || location.pathname.indexOf('/en/') > -1;
+  var T = EN ? {
+    txt: 'We use one analytics cookie (Metricool) to count visits — nothing else. ',
+    mais: 'Privacy policy', sim: 'Accept', nao: 'Decline',
+  } : {
+    txt: 'Usamos um único cookie analítico (Metricool) para contar visitas — mais nada. ',
+    mais: 'Política de privacidade', sim: 'Aceitar', nao: 'Recusar',
+  };
+  var priv = EN ? '../privacidade.html' : 'privacidade.html';
+
+  function liga() {
+    var b = document.getElementsByTagName('head')[0], c = document.createElement('script');
+    c.type = 'text/javascript'; c.src = 'https://tracker.metricool.com/resources/be.js';
+    c.onload = function () { try { beTracker.t({ hash: '558a3450bf8434b88d973867baafd42b' }); } catch (e) {} };
+    b.appendChild(c);
   }
-  loadScript(function () { beTracker.t({ hash: "558a3450bf8434b88d973867baafd42b" }); });
+  function mostra() {
+    if (document.getElementById('kn-cookies')) return;
+    var d = document.createElement('div');
+    d.id = 'kn-cookies';
+    d.setAttribute('role', 'dialog');
+    d.setAttribute('aria-label', EN ? 'Cookie notice' : 'Aviso de cookies');
+    d.innerHTML = '<p>' + T.txt + '<a href="' + priv + '">' + T.mais + '</a></p>' +
+      '<div><button type="button" data-v="nao">' + T.nao + '</button>' +
+      '<button type="button" class="sim" data-v="sim">' + T.sim + '</button></div>';
+    d.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      try { localStorage.setItem('kn-consent', b.dataset.v); } catch (er) {}
+      d.remove();
+      if (b.dataset.v === 'sim') liga();
+    });
+    document.body.appendChild(d);
+  }
+  window.knCookies = function () { try { localStorage.removeItem('kn-consent'); } catch (e) {} mostra(); };
+  var atual = null;
+  try { atual = localStorage.getItem('kn-consent'); } catch (e) {}
+  if (atual === 'sim') liga();
+  else if (atual !== 'nao') mostra();
 })();

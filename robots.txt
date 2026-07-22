@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /plano/
+Disallow: /inbox.html
+Disallow: /obrigado.html
+Disallow: /en/obrigado.html
+
+Sitemap: https://koolnature.pt/sitemap.xml
