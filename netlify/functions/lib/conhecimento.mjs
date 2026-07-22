@@ -17,7 +17,7 @@ export default {
         "30 dm³ = 5 kg (≈10 kg trad.)",
         "60 dm³ = 9 kg (≈20 kg trad.)"
       ],
-      "impactoPorSaco": "Rácio de produção 5:1 — cada tonelada de biocarvão retira 5 t de acácia invasora da floresta. Por saco: 12,5 kg de acácia (15 dm³), 25 kg (30 dm³), 45 kg (60 dm³).",
+      "impactoPorSaco": "Rácio de produção 5:1 — cada tonelada de biocarvão retira 5 t de acácia invasora (e limpa 200–330 m² de floresta). Por saco: 12,5 kg de acácia = 0,5–0,8 m² limpos (15 dm³); 25 kg = 1–1,7 m² (30 dm³); 45 kg = 1,8–3 m² (60 dm³). Metodologia: peso do saco × 5, dividido pela densidade real dos terrenos (150–250 t de acácia por hectare). Intervalos conservadores e verificáveis.",
       "vantagens": [
         "Maior poder calorífico (usa menos 20–30%)",
         "Acende em 15–20 min",
