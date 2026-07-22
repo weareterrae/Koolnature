@@ -145,12 +145,12 @@
   const botao = document.createElement("button");
   botao.id = "mk-botao";
   botao.setAttribute("aria-label", W.abrir);
-  botao.innerHTML = `<img src="${EN ? "../" : ""}assets/chef-kool.png" alt="" />`;
+  botao.innerHTML = `<img src="/assets/chef-kool.png" alt="" />`;
 
   const painel = document.createElement("div");
   painel.id = "mk-painel";
   painel.innerHTML =
-    `<div class="mk-topo"><img class="mk-avatar" src="${EN ? '../' : ''}assets/chef-kool.png" alt="" /><div><b>Chef Kool</b><span>${W.sub}</span></div></div>` +
+    `<div class="mk-topo"><img class="mk-avatar" src="/assets/chef-kool.png" alt="" /><div><b>Chef Kool</b><span>${W.sub}</span></div></div>` +
     '<div id="mk-conversa" aria-live="polite"></div>' +
     '<div class="mk-sugestoes">' +
     W.sugestoes.map((t) => `<button type="button">${t}</button>`).join("") +
@@ -213,7 +213,7 @@
     t.id = "mk-teaser";
     t.innerHTML =
       `<button type="button" class="mk-teaser-fechar" aria-label="${W.teaserFechar}">×</button>` +
-      `<img src="${EN ? "../" : ""}assets/chef-kool.png" alt="" />` +
+      `<img src="/assets/chef-kool.png" alt="" />` +
       `<div><b>${W.teaserTitulo}</b><span>${W.teaserTexto}</span></div>`;
     document.body.appendChild(t);
 

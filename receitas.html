@@ -60,7 +60,7 @@
 <section id="menu">
   <div class="wrap">
     <span class="eyebrow">O menu da brasa</span>
-    <h2>Dezassete provas de que a brasa <span class="azul">faz tudo</span></h2>
+    <h2>Dezassete provas de que a brasa <span class="azul">faz tudo</span></h2><div class="rc-filtros" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:22px 0 6px"><button type="button" class="rc-filtro ativo" data-f="*" style="border:1px solid #c9d3e6;background:#00379E;color:#fff;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Todas</button><button type="button" class="rc-filtro" data-f="tipo:carne" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Carne</button><button type="button" class="rc-filtro" data-f="tipo:peixe|marisco" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Peixe e marisco</button><button type="button" class="rc-filtro" data-f="tipo:vegetariano" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Vegetariano</button><button type="button" class="rc-filtro" data-f="tipo:sobremesa" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Sobremesas</button><button type="button" class="rc-filtro" data-f="calor:direto" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Fogo direto</button><button type="button" class="rc-filtro" data-f="calor:indireto|misto" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Fogo indireto</button></div>
     <p class="lead">Escolhe por onde começar — cada receita traz a brasa certa, o tempo, a temperatura quando conta, e a dica que faz a diferença.</p>
     <div class="cat-nav">
       <a href="#entradas">🥖 Entradas</a>
@@ -78,7 +78,7 @@
     <div class="cat-cabeca"><h2>Entradas</h2><span class="script">para abrir o apetite</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="direto">
         <img loading="lazy" src="assets/receita-pao-alho.jpg" alt="Broa e pão de alho na grelha" />
         <div class="corpo">
           <div class="meta"><span>🥖 Entrada</span><span>Direto médio</span><span>10 min</span><span>Couvert</span></div>
@@ -96,9 +96,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> a broa aguenta brasa melhor do que qualquer pão — a crosta densa torra sem secar por dentro.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/broa-e-pao-de-alho-na-grelha.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="direto">
         <img loading="lazy" src="assets/receita-ameijoas.jpg" alt="Amêijoas à Bulhão Pato feitas na brasa" />
         <div class="corpo">
           <div class="meta"><span>🐚 Entrada</span><span>Tacho na brasa</span><span>12 min</span><span>Petisco</span></div>
@@ -118,9 +119,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> o fumo da brasa entra no molho — é o Bulhão Pato que nenhum restaurante de centro comercial consegue fazer.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/ameijoas-a-bulhao-pato-na-brasa.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="indireto">
         <img loading="lazy" src="assets/receita-queijo.jpg" alt="Queijo da Serra derretido na brasa com mel e nozes" />
         <div class="corpo">
           <div class="meta"><span>🧀 Entrada</span><span>Indireto suave</span><span>15 min</span><span>Petisco</span></div>
@@ -139,6 +141,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> serve na hora, ainda a borbulhar — este prato não espera por ninguém.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/queijo-da-serra-na-brasa-com-mel.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -150,7 +153,7 @@
     <div class="cat-cabeca"><h2>Do mar</h2><span class="script">o Atlântico na grelha</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="assets/receita-sardinhas.jpg" alt="Sardinhas de arraial grelhadas sobre pão" />
         <div class="corpo">
           <div class="meta"><span>🐟 Peixe</span><span>Direto forte</span><span>20 min</span><span>4 pessoas</span></div>
@@ -168,9 +171,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> a sardinha está pronta quando a pele descola sozinha — se agarra à grelha, ainda não é hora de virar.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/sardinhas-de-arraial-no-pao.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="assets/receita-polvo.jpg" alt="Polvo à lagareiro na grelha com batatas ao murro" />
         <div class="corpo">
           <div class="meta"><span>🐙 Marisco</span><span>Direto forte</span><span>15 min</span><span>4 pessoas</span></div>
@@ -189,9 +193,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> o alho aquece no azeite ao lado da brasa, nunca em cima — queimado, amarga tudo.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/polvo-a-lagareiro-na-grelha.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="direto">
         <img loading="lazy" src="assets/receita-camarao.jpg" alt="Camarão tigre grelhado com manteiga de alho e piri-piri" />
         <div class="corpo">
           <div class="meta"><span>🦐 Marisco</span><span>Direto forte</span><span>10 min</span><span>4 pessoas</span></div>
@@ -210,9 +215,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> camarão que curva e fica rosado está pronto (49–52 °C) — nem mais um minuto.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/camarao-tigre-com-alho-e-piri-piri.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="assets/receita-tamboril.jpg" alt="Espetadas de tamboril e camarão em ramos de louro" />
         <div class="corpo">
           <div class="meta"><span>🐟 Peixe</span><span>Direto forte</span><span>15 min</span><span>4 pessoas</span></div>
@@ -232,6 +238,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> o segredo madeirense — o espeto de louro verde solta óleos aromáticos com o calor. Nenhum espeto de metal faz isto.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/espetada-de-tamboril-em-pau-de-louro.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -243,7 +250,7 @@
     <div class="cat-cabeca"><h2>Da terra</h2><span class="script">carne com respeito</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="misto">
         <img loading="lazy" src="assets/receita-frango.jpg" alt="Frango piri-piri espalmado na grelha" />
         <div class="corpo">
           <div class="meta"><span>🍗 Carne</span><span>Indireto + direto</span><span>45 min</span><span>4 pessoas</span></div>
@@ -262,9 +269,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> descansa o frango 5 minutos antes de cortar — os sucos redistribuem-se e não fogem para a tábua.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/frango-piri-piri-a-moda-da-guia.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="indireto">
         <img loading="lazy" src="assets/receita-entrecosto.jpg" alt="Entrecosto caramelizado com mel e alho" />
         <div class="corpo">
           <div class="meta"><span>🥩 Carne</span><span>Indireto longo</span><span>1h</span><span>6 pessoas</span></div>
@@ -283,9 +291,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> aos 63 °C é seguro mas rijo — o colagénio só se rende aos 88–92 °C. Paciência é o ingrediente principal.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/entrecosto-lento-com-mel-e-alho.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="misto">
         <img loading="lazy" src="assets/receita-costeletao.jpg" alt="Costeletão maturado a selar na grelha com chama" />
         <div class="corpo">
           <div class="meta"><span>🥩 Carne</span><span>Direto + indireto</span><span>30 min</span><span>2–3 pessoas</span></div>
@@ -304,9 +313,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> um termómetro de carne custa pouco e nunca falha — os minutos são guia, a temperatura é lei.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/costeletao-maturado-ao-ponto.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="direto">
         <img loading="lazy" src="assets/receita-borrego.jpg" alt="Costeletas de borrego com alecrim na grelha" />
         <div class="corpo">
           <div class="meta"><span>🐑 Carne</span><span>Direto média-forte</span><span>20 min</span><span>4 pessoas</span></div>
@@ -325,6 +335,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> atira um ramo de alecrim diretamente para a brasa no último minuto — o fumo aromático faz metade do tempero.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/costeletas-de-borrego-com-alecrim.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -337,7 +348,7 @@
     <p class="lead">A brasa não serve só a grelha: um tacho de barro ou uma cataplana em cima das brasas cozinham como nenhum fogão — calor envolvente, constante e com alma.</p>
     <div class="receitas-grelha">
 
-      <article class="receita destaque">
+      <article class="receita destaque" data-tipo="vegetariano" data-calor="indireto">
         <img loading="lazy" src="assets/receita-arroz-tomate.jpg" alt="Arroz de tomate com poejos em tacho de barro sobre a brasa" />
         <div class="corpo">
           <div class="meta"><span>🍲 Tacho de barro</span><span>Brasa média</span><span>35 min</span><span>4 pessoas</span></div>
@@ -358,9 +369,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> o tacho de barro guarda calor e continua a cozinhar depois de sair da brasa — tira o arroz mais caldoso do que o queres, que ele chega à mesa no ponto. E o poejo entra sempre no fim: fervido, perde o perfume.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/arroz-de-tomate-com-poejos-no-tacho.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="indireto">
         <img loading="lazy" src="assets/receita-cataplana.jpg" alt="Cataplana de marisco aberta sobre a brasa" />
         <div class="corpo">
           <div class="meta"><span>🍲 Cataplana</span><span>Brasa média</span><span>30 min</span><span>4 pessoas</span></div>
@@ -380,6 +392,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> vira a cataplana a meio com luvas — 8 min de cada lado — e o calor distribui-se como no Algarve manda.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/cataplana-de-marisco-na-brasa.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -391,7 +404,7 @@
     <div class="cat-cabeca"><h2>Da horta</h2><span class="script">os legumes também ardem de amores</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="direto">
         <img loading="lazy" src="assets/receita-legumes.jpg" alt="Tábua de legumes grelhados com sal grosso" />
         <div class="corpo">
           <div class="meta"><span>🌽 Vegetariano</span><span>Direto médio</span><span>25 min</span><span>4 pessoas</span></div>
@@ -410,6 +423,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> os portobellos são o "bife" da horta — lamelas para cima no fim, com azeite e alho a encher o chapéu.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/tabua-de-legumes-com-sal-de-brasa.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -421,7 +435,7 @@
     <div class="cat-cabeca"><h2>Sobremesas</h2><span class="script">sim, a brasa faz sobremesas</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="direto">
         <img loading="lazy" src="assets/receita-ananas.jpg" alt="Ananás grelhado caramelizado com canela e gelado" />
         <div class="corpo">
           <div class="meta"><span>🍍 Sobremesa</span><span>Direto médio</span><span>10 min</span><span>4 pessoas</span></div>
@@ -440,9 +454,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> quente + frio no mesmo prato é o truque mais velho (e mais infalível) da pastelaria — a brasa faz a parte quente na perfeição.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/ananas-caramelizado-com-canela-e-lima.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="direto">
         <img loading="lazy" src="assets/receita-pessegos.jpg" alt="Pêssegos grelhados com mel e requeijão" />
         <div class="corpo">
           <div class="meta"><span>🍑 Sobremesa</span><span>Direto médio</span><span>10 min</span><span>4 pessoas</span></div>
@@ -461,9 +476,10 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> fruta com caroço nunca vai verde à grelha — madura mas firme é o ponto: caramelo por fora, compota por dentro.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/pessegos-na-brasa-com-mel-e-requeijao.html"><b>Ver receita completa →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="indireto">
         <img loading="lazy" src="assets/receita-banana.jpg" alt="Banana na casca com chocolate negro derretido" />
         <div class="corpo">
           <div class="meta"><span>🍫 Sobremesa</span><span>Brasa suave</span><span>12 min</span><span>4 pessoas</span></div>
@@ -482,6 +498,7 @@
           </ol>
           <p class="dica"><b>Dica de mestre:</b> a casca preta assusta os principiantes — é exatamente o que queres: é a panela natural da banana.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/banana-fondant-com-chocolate-negro.html"><b>Ver receita completa →</b></a></p>
       </article>
 
     </div>
@@ -543,5 +560,6 @@
 <script src="js/brasa-dados.js" defer></script>
 <script src="js/site.js" defer></script>
 <script src="js/mestre-kool.js" defer></script>
+<script>(function(){var bs=document.querySelectorAll(".rc-filtro");function aplica(f){document.querySelectorAll(".receita").forEach(function(c){var ok=true;if(f!=="*"){var p=f.split(":"),attr="data-"+p[0],vals=p[1].split("|");ok=vals.indexOf(c.getAttribute(attr))>-1;}c.style.display=ok?"":"none";});document.querySelectorAll("section").forEach(function(s){var rs=s.querySelectorAll(".receita");if(!rs.length)return;var vis=0;rs.forEach(function(c){if(c.style.display!=="none")vis++;});s.style.display=vis?"":"none";});}bs.forEach(function(b){b.addEventListener("click",function(){bs.forEach(function(x){x.classList.remove("ativo");x.style.background="#fff";x.style.color="#33405c";});b.classList.add("ativo");b.style.background="#00379E";b.style.color="#fff";aplica(b.dataset.f);});});})();</script>
 </body>
 </html>

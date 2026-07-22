@@ -60,7 +60,7 @@
 <section id="menu">
   <div class="wrap">
     <span class="eyebrow">The fire menu</span>
-    <h2>Seventeen proofs that fire <span class="azul">does everything</span></h2>
+    <h2>Seventeen proofs that fire <span class="azul">does everything</span></h2><div class="rc-filtros" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:22px 0 6px"><button type="button" class="rc-filtro ativo" data-f="*" style="border:1px solid #c9d3e6;background:#00379E;color:#fff;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">All</button><button type="button" class="rc-filtro" data-f="tipo:carne" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Meat</button><button type="button" class="rc-filtro" data-f="tipo:peixe|marisco" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Fish & seafood</button><button type="button" class="rc-filtro" data-f="tipo:vegetariano" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Vegetarian</button><button type="button" class="rc-filtro" data-f="tipo:sobremesa" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Desserts</button><button type="button" class="rc-filtro" data-f="calor:direto" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Direct heat</button><button type="button" class="rc-filtro" data-f="calor:indireto|misto" style="border:1px solid #c9d3e6;background:#fff;color:#33405c;font:600 13.5px Archivo,sans-serif;padding:9px 18px;border-radius:999px;cursor:pointer">Indirect heat</button></div>
     <p class="lead">Choose where to start — every recipe comes with the right embers, the time, the temperature when it matters, and the tip that makes the difference.</p>
     <div class="cat-nav">
       <a href="#entradas">🥖 Starters</a>
@@ -78,7 +78,7 @@
     <div class="cat-cabeca"><h2>Starters</h2><span class="script">to open the appetite</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="direto">
         <img loading="lazy" src="../assets/receita-pao-alho.jpg" alt="Corn bread and garlic bread on the grill" />
         <div class="corpo">
           <div class="meta"><span>🥖 Starter</span><span>Direct medium</span><span>10 min</span><span>Couvert</span></div>
@@ -96,9 +96,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> broa handles embers better than any bread — the dense crust toasts without drying out inside.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/broa-e-pao-de-alho-na-grelha.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="direto">
         <img loading="lazy" src="../assets/receita-ameijoas.jpg" alt="Clams Bulhão Pato cooked over the embers" />
         <div class="corpo">
           <div class="meta"><span>🐚 Starter</span><span>Pan on embers</span><span>12 min</span><span>Sharing</span></div>
@@ -118,9 +119,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> the ember smoke works its way into the sauce — it's a Bulhão Pato no shopping-mall restaurant can make.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/ameijoas-a-bulhao-pato-na-brasa.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="indireto">
         <img loading="lazy" src="../assets/receita-queijo.jpg" alt="Serra cheese melted over the embers with honey and walnuts" />
         <div class="corpo">
           <div class="meta"><span>🧀 Starter</span><span>Gentle indirect</span><span>15 min</span><span>Sharing</span></div>
@@ -139,6 +141,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> serve immediately, still bubbling — this dish waits for no one.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/queijo-da-serra-na-brasa-com-mel.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -150,7 +153,7 @@
     <div class="cat-cabeca"><h2>From the sea</h2><span class="script">the Atlantic on the grill</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="../assets/receita-sardinhas.jpg" alt="Festival-style grilled sardines on bread" />
         <div class="corpo">
           <div class="meta"><span>🐟 Fish</span><span>Direct hot</span><span>20 min</span><span>Serves 4</span></div>
@@ -168,9 +171,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> a sardine is done when the skin lifts away by itself — if it sticks to the grate, it's not time to flip yet.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/sardinhas-de-arraial-no-pao.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="../assets/receita-polvo.jpg" alt="Lagareiro-style octopus on the grill with punched potatoes" />
         <div class="corpo">
           <div class="meta"><span>🐙 Seafood</span><span>Direct hot</span><span>15 min</span><span>Serves 4</span></div>
@@ -189,9 +193,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> the garlic warms in the oil beside the embers, never on top — burnt garlic turns everything bitter.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/polvo-a-lagareiro-na-grelha.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="direto">
         <img loading="lazy" src="../assets/receita-camarao.jpg" alt="Grilled tiger prawns with garlic and piri-piri butter" />
         <div class="corpo">
           <div class="meta"><span>🦐 Seafood</span><span>Direct hot</span><span>10 min</span><span>Serves 4</span></div>
@@ -210,9 +215,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> a prawn that curls into a C and turns pink is done (49–52 °C) — not one minute more.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/camarao-tigre-com-alho-e-piri-piri.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="peixe" data-calor="direto">
         <img loading="lazy" src="../assets/receita-tamboril.jpg" alt="Monkfish and prawn skewers on bay-laurel branches" />
         <div class="corpo">
           <div class="meta"><span>🐟 Fish</span><span>Direct hot</span><span>15 min</span><span>Serves 4</span></div>
@@ -232,6 +238,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> the Madeiran secret — a green laurel skewer releases aromatic oils with the heat. No metal skewer can do that.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/espetada-de-tamboril-em-pau-de-louro.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -243,7 +250,7 @@
     <div class="cat-cabeca"><h2>From the land</h2><span class="script">meat, treated with respect</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="misto">
         <img loading="lazy" src="../assets/receita-frango.jpg" alt="Spatchcock piri-piri chicken on the grill" />
         <div class="corpo">
           <div class="meta"><span>🍗 Meat</span><span>Indirect + direct</span><span>45 min</span><span>Serves 4</span></div>
@@ -262,9 +269,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> rest the chicken 5 minutes before carving — the juices redistribute instead of running onto the board.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/frango-piri-piri-a-moda-da-guia.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="indireto">
         <img loading="lazy" src="../assets/receita-entrecosto.jpg" alt="Caramelised pork ribs with honey and garlic" />
         <div class="corpo">
           <div class="meta"><span>🥩 Meat</span><span>Long indirect</span><span>1h</span><span>Serves 6</span></div>
@@ -283,9 +291,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> at 63 °C it's safe but tough — collagen only surrenders at 88–92 °C. Patience is the main ingredient.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/entrecosto-lento-com-mel-e-alho.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="misto">
         <img loading="lazy" src="../assets/receita-costeletao.jpg" alt="Aged rib steak searing on the grill with flame" />
         <div class="corpo">
           <div class="meta"><span>🥩 Meat</span><span>Direct + indirect</span><span>30 min</span><span>Serves 2–3</span></div>
@@ -304,9 +313,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> a meat thermometer costs little and never fails — minutes are a guide, temperature is the law.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/costeletao-maturado-ao-ponto.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="carne" data-calor="direto">
         <img loading="lazy" src="../assets/receita-borrego.jpg" alt="Lamb chops with rosemary on the grill" />
         <div class="corpo">
           <div class="meta"><span>🐑 Meat</span><span>Direct medium-hot</span><span>20 min</span><span>Serves 4</span></div>
@@ -325,6 +335,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> throw a rosemary sprig straight onto the embers in the last minute — the aromatic smoke does half the seasoning.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/costeletas-de-borrego-com-alecrim.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -337,7 +348,7 @@
     <p class="lead">Fire isn't only for the grate: a clay pot or a cataplana on the embers cooks like no stove can — enveloping, steady heat with soul.</p>
     <div class="receitas-grelha">
 
-      <article class="receita destaque">
+      <article class="receita destaque" data-tipo="vegetariano" data-calor="indireto">
         <img loading="lazy" src="../assets/receita-arroz-tomate.jpg" alt="Tomato rice with pennyroyal in a clay pot over the embers" />
         <div class="corpo">
           <div class="meta"><span>🍲 Clay pot</span><span>Medium embers</span><span>35 min</span><span>Serves 4</span></div>
@@ -358,9 +369,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> the clay pot holds heat and keeps cooking after it leaves the embers — take the rice off soupier than you want it, and it reaches the table just right. And pennyroyal always goes in at the end: boiled, it loses its perfume.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/arroz-de-tomate-com-poejos-no-tacho.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="marisco" data-calor="indireto">
         <img loading="lazy" src="../assets/receita-cataplana.jpg" alt="Seafood cataplana opened over the embers" />
         <div class="corpo">
           <div class="meta"><span>🍲 Cataplana</span><span>Medium embers</span><span>30 min</span><span>Serves 4</span></div>
@@ -380,6 +392,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> flip the cataplana halfway with gloves — 8 min per side — and the heat spreads the way the Algarve intended.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/cataplana-de-marisco-na-brasa.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -391,7 +404,7 @@
     <div class="cat-cabeca"><h2>From the garden</h2><span class="script">vegetables catch fire too</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="vegetariano" data-calor="direto">
         <img loading="lazy" src="../assets/receita-legumes.jpg" alt="Board of grilled vegetables with coarse salt" />
         <div class="corpo">
           <div class="meta"><span>🌽 Vegetarian</span><span>Direct medium</span><span>25 min</span><span>Serves 4</span></div>
@@ -410,6 +423,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> portobellos are the garden's "steak" — gills up at the end, with olive oil and garlic filling the cap.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/tabua-de-legumes-com-sal-de-brasa.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -421,7 +435,7 @@
     <div class="cat-cabeca"><h2>Desserts</h2><span class="script">yes, the fire makes dessert</span></div>
     <div class="receitas-grelha">
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="direto">
         <img loading="lazy" src="../assets/receita-ananas.jpg" alt="Caramelised grilled pineapple with cinnamon and ice cream" />
         <div class="corpo">
           <div class="meta"><span>🍍 Dessert</span><span>Direct medium</span><span>10 min</span><span>Serves 4</span></div>
@@ -440,9 +454,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> hot + cold on the same plate is pastry's oldest (and most infallible) trick — the embers do the hot part to perfection.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/ananas-caramelizado-com-canela-e-lima.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="direto">
         <img loading="lazy" src="../assets/receita-pessegos.jpg" alt="Grilled peaches with honey and ricotta" />
         <div class="corpo">
           <div class="meta"><span>🍑 Dessert</span><span>Direct medium</span><span>10 min</span><span>Serves 4</span></div>
@@ -461,9 +476,10 @@
           </ol>
           <p class="dica"><b>Master tip:</b> stone fruit never goes on the grill unripe — ripe but firm is the sweet spot: caramel outside, jam inside.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/pessegos-na-brasa-com-mel-e-requeijao.html"><b>See full recipe →</b></a></p>
       </article>
 
-      <article class="receita">
+      <article class="receita" data-tipo="sobremesa" data-calor="indireto">
         <img loading="lazy" src="../assets/receita-banana.jpg" alt="Banana in its skin with melted dark chocolate" />
         <div class="corpo">
           <div class="meta"><span>🍫 Dessert</span><span>Gentle embers</span><span>12 min</span><span>Serves 4</span></div>
@@ -482,6 +498,7 @@
           </ol>
           <p class="dica"><b>Master tip:</b> the black skin scares beginners — it's exactly what you want: it's the banana's natural cooking pot.</p>
         </div>
+        <p style="margin:0 0 18px"><a class="rc-link" href="receitas/banana-fondant-com-chocolate-negro.html"><b>See full recipe →</b></a></p>
       </article>
 
     </div>
@@ -543,5 +560,6 @@
 <script src="../js/brasa-dados-en.js" defer></script>
 <script src="../js/site.js" defer></script>
 <script src="../js/mestre-kool.js" defer></script>
+<script>(function(){var bs=document.querySelectorAll(".rc-filtro");function aplica(f){document.querySelectorAll(".receita").forEach(function(c){var ok=true;if(f!=="*"){var p=f.split(":"),attr="data-"+p[0],vals=p[1].split("|");ok=vals.indexOf(c.getAttribute(attr))>-1;}c.style.display=ok?"":"none";});document.querySelectorAll("section").forEach(function(s){var rs=s.querySelectorAll(".receita");if(!rs.length)return;var vis=0;rs.forEach(function(c){if(c.style.display!=="none")vis++;});s.style.display=vis?"":"none";});}bs.forEach(function(b){b.addEventListener("click",function(){bs.forEach(function(x){x.classList.remove("ativo");x.style.background="#fff";x.style.color="#33405c";});b.classList.add("ativo");b.style.background="#00379E";b.style.color="#fff";aplica(b.dataset.f);});});})();</script>
 </body>
 </html>
