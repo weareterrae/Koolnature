@@ -205,10 +205,20 @@
   var priv = EN ? '../privacidade.html' : 'privacidade.html';
 
   function liga() {
-    var b = document.getElementsByTagName('head')[0], c = document.createElement('script');
+    var head = document.getElementsByTagName('head')[0];
+    // Metricool (contagem de visitas)
+    var c = document.createElement('script');
     c.type = 'text/javascript'; c.src = 'https://tracker.metricool.com/resources/be.js';
     c.onload = function () { try { beTracker.t({ hash: '558a3450bf8434b88d973867baafd42b' }); } catch (e) {} };
-    b.appendChild(c);
+    head.appendChild(c);
+    // Google Analytics 4 (eventos de negócio) — só após consentimento
+    var g = document.createElement('script');
+    g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=G-W2JRWTQE5V';
+    head.appendChild(g);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', 'G-W2JRWTQE5V', { anonymize_ip: true });
   }
   function mostra() {
     if (document.getElementById('kn-cookies')) return;
@@ -232,4 +242,44 @@
   try { atual = localStorage.getItem('kn-consent'); } catch (e) {}
   if (atual === 'sim') liga();
   else if (atual !== 'nao') mostra();
+})();
+
+
+/* ---------- Eventos de negócio (GA4; só disparam se houver consentimento/gtag) ---------- */
+(function () {
+  function ev(nome, params) { if (typeof window.gtag === 'function') window.gtag('event', nome, params || {}); }
+  window.knEvento = ev;
+
+  // vistas de conteúdo-chave (pelo caminho)
+  var p = location.pathname;
+  if (p.indexOf('/receitas/') > -1 && p.slice(-5) === '.html') ev('ver_receita', { receita: p.split('/').pop().replace('.html', '') });
+  if (/(guia-acender-carvao|quanto-carvao-por-pessoa|duas-zonas-de-calor|carvao-ou-briquetes)/.test(p)) ev('ver_guia', { guia: p.split('/').pop().replace('.html', '') });
+  if (/onde-comprar/.test(p)) ev('ver_onde_comprar');
+  if (/profissionais/.test(p)) ev('ver_profissionais');
+
+  // cliques (delegado)
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a, button'); if (!a) return;
+    var h = (a.getAttribute && a.getAttribute('href')) || '';
+    if (h.indexOf('onde-comprar') > -1) ev('clique_onde_comprar', { origem: p });
+    else if (h.indexOf('profissionais') > -1) ev('clique_profissionais', { origem: p });
+    else if (h.indexOf('tel:') === 0) ev('clique_telefone', { numero: h.slice(4) });
+    else if (h.indexOf('mailto:') === 0) ev('clique_email');
+    else if (a.id === 'mk-botao' || (a.closest && a.closest('#mk-botao'))) ev('chef_kool_abrir', { pagina: p });
+  }, true);
+
+  // pesquisa no diretório de distribuidores (1º uso por página)
+  var buscou = false;
+  document.addEventListener('input', function (e) {
+    if (!buscou && e.target && e.target.classList && e.target.classList.contains('pv-busca')) {
+      buscou = true; ev('pesquisa_distribuidor');
+    }
+  }, true);
+
+  // envio de formulários
+  document.addEventListener('submit', function (e) {
+    var f = e.target; if (!f || !f.getAttribute) return;
+    var nome = f.getAttribute('name') || 'form';
+    ev('form_' + nome, { pagina: p });
+  }, true);
 })();
