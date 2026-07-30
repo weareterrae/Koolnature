@@ -133,6 +133,10 @@ h3 { font-size: 21px; font-weight: 800; }
   max-height: 500px;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
 }
+/* hero-churrasco: versao leve para mobile (LCP) — override do background inline */
+@media (max-width: 880px) {
+  .hero--churrasco { background-image: url('../assets/hero-churrasco-960.webp') !important; }
+}
 
 /* ---------- banda azul de benefícios (eco da embalagem) ---------- */
 .banda-azul {
