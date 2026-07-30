@@ -174,19 +174,70 @@
   }
 
   let ocupado = false;
+  let ultimoEnvio = 0;      // travão: intervalo mínimo entre envios
+  let contagemMsg = 0;      // travão: teto de mensagens por conversa
+  const INTERVALO_MIN = 900;
+  const MAX_MSG = 30;
+  const contactoHumano = EN
+    ? "We've chatted quite a bit! 🔥 For anything more, write to info@koolnature.pt or call +351 925 969 526 — the team replies fast."
+    : "Já demos uma boa conversa! 🔥 Para o que precisares mais, escreve para info@koolnature.pt ou liga +351 925 969 526 — a equipa responde depressa.";
+
+  // dispara um evento GA4 (só se houver consentimento/gtag; ver js/site.js)
+  const ev = (nome, params) => { try { if (typeof window.knEvento === "function") window.knEvento(nome, params || {}); } catch (e) {} };
+
+  // capta um lead vindo da conversa: envia para o MESMO destino do formulário do site
+  // (Netlify Forms → info@koolnature.pt) e dispara o evento de conversão.
+  function captaLead(nome, contacto, interesse) {
+    var corpo = new URLSearchParams({
+      "form-name": "chef-kool-lead",
+      nome: (nome || "").slice(0, 120),
+      contacto: (contacto || "").slice(0, 120),
+      interesse: (interesse || "OndeComprar").slice(0, 40),
+      idioma: EN ? "EN" : "PT",
+      pagina: location.pathname,
+    });
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: corpo.toString() })
+      .then(function () { ev("lead_assistente", { interesse: interesse || "OndeComprar", idioma: EN ? "EN" : "PT" }); })
+      .catch(function () {}); // se falhar a submissão, não estraga a conversa
+  }
+
+  // extrai o marcador oculto ⟦LEAD|nome|contacto|interesse⟧ e devolve o texto limpo
+  function tratarMarcadorLead(texto) {
+    var re = /⟦\s*LEAD\s*\|([^|⟧]*)\|([^|⟧]*)\|([^|⟧]*)⟧/i;
+    var m = texto.match(re);
+    if (m) {
+      captaLead(m[1].trim(), m[2].trim(), m[3].trim());
+      texto = texto.replace(re, "").replace(/\n{3,}/g, "\n\n").trim();
+    }
+    return texto;
+  }
 
   async function perguntar(txt) {
     txt = txt.trim();
     if (!txt || ocupado) return;
+    const agora = Date.now();
+    if (agora - ultimoEnvio < INTERVALO_MIN) return; // travão: envios demasiado rápidos
+    ultimoEnvio = agora;
+
+    // teto de mensagens por conversa → encaminha para o contacto humano
+    if (contagemMsg >= MAX_MSG) {
+      msg(txt, "eu");
+      msg(contactoHumano, "bot");
+      return;
+    }
+    contagemMsg++;
+
     ocupado = true;
     msg(txt, "eu");
     historico.push({ role: "user", content: txt });
+    ev("mensagem_enviada", { pagina: location.pathname });
 
     const espera = msg("…", "bot");
     espera.classList.add("espera");
 
     let texto = await respostaIA();
     if (!texto) texto = responder(txt); // rede de segurança: motor local
+    texto = tratarMarcadorLead(texto);  // capta lead e limpa o marcador antes de mostrar
 
     espera.classList.remove("espera");
     espera.textContent = texto;
