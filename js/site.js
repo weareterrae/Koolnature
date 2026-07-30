@@ -190,21 +190,38 @@
   });
 })();
 
-/* ---------- Consentimento de cookies + Tracking do Metricool ----------
-   O tracker (cookie analítico) só carrega depois de a pessoa aceitar.
+/* ---------- Consentimento de cookies + medição (Consent Mode v2) ----------
+   GA4 + Metricool + Meta Pixel só carregam depois de a pessoa aceitar.
+   Antes disso: Consent Mode v2 com tudo "denied" (público PT → RGPD).
    Escolha guardada em localStorage kn-consent: 'sim' | 'nao'. "knCookies()" reabre o aviso. */
 (function () {
+  var GA4_ID = 'G-W2JRWTQE5V';
+  var PIXEL_ID = ''; // ⚠️ Meta Pixel ainda não criado — preencher aqui quando existir
+
   var EN = document.documentElement.lang === 'en' || location.pathname.indexOf('/en/') > -1;
   var T = EN ? {
-    txt: 'We use one analytics cookie (Metricool) to count visits — nothing else. ',
+    txt: 'We use analytics cookies (Google Analytics and Metricool) to understand visits — nothing else. ',
     mais: 'Privacy policy', sim: 'Accept', nao: 'Decline',
   } : {
-    txt: 'Usamos um único cookie analítico (Metricool) para contar visitas — mais nada. ',
+    txt: 'Usamos cookies analíticos (Google Analytics e Metricool) para perceber as visitas — mais nada. ',
     mais: 'Política de privacidade', sim: 'Aceitar', nao: 'Recusar',
   };
   var priv = EN ? '../privacidade.html' : 'privacidade.html';
 
+  // dataLayer + gtag existem sempre; Consent Mode v2 arranca em "denied"
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+  gtag('consent', 'default', {
+    ad_storage: 'denied', analytics_storage: 'denied',
+    ad_user_data: 'denied', ad_personalization: 'denied',
+    wait_for_update: 500,
+  });
+
   function liga() {
+    gtag('consent', 'update', {
+      ad_storage: 'granted', analytics_storage: 'granted',
+      ad_user_data: 'granted', ad_personalization: 'granted',
+    });
     var head = document.getElementsByTagName('head')[0];
     // Metricool (contagem de visitas)
     var c = document.createElement('script');
@@ -213,12 +230,21 @@
     head.appendChild(c);
     // Google Analytics 4 (eventos de negócio) — só após consentimento
     var g = document.createElement('script');
-    g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=G-W2JRWTQE5V';
+    g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
     head.appendChild(g);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { dataLayer.push(arguments); };
     gtag('js', new Date());
-    gtag('config', 'G-W2JRWTQE5V', { anonymize_ip: true });
+    gtag('config', GA4_ID, { anonymize_ip: true });
+    // Meta Pixel — só se houver ID configurado
+    if (PIXEL_ID) {
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+        t = b.createElement(e); t.async = !0; t.src = v;
+        s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', PIXEL_ID);
+      fbq('track', 'PageView');
+    }
   }
   function mostra() {
     if (document.getElementById('kn-cookies')) return;
@@ -245,10 +271,23 @@
 })();
 
 
-/* ---------- Eventos de negócio (GA4; só disparam se houver consentimento/gtag) ---------- */
+/* ---------- Camada de eventos: window.knTrack ----------
+   Empurra sempre para o dataLayer (via gtag) e faz ponte para o Meta Pixel
+   quando este estiver carregado. Nada sai para a rede sem consentimento. */
 (function () {
-  function ev(nome, params) { if (typeof window.gtag === 'function') window.gtag('event', nome, params || {}); }
-  window.knEvento = ev;
+  var FBQ_STD = { generate_lead: 'Lead' }; // mapeamento para eventos standard do Pixel
+  function ev(nome, params) {
+    params = params || {};
+    try { window.gtag('event', nome, params); } catch (e) {}
+    if (typeof window.fbq === 'function') {
+      try {
+        if (FBQ_STD[nome]) window.fbq('track', FBQ_STD[nome], params);
+        else window.fbq('trackCustom', nome, params);
+      } catch (e) {}
+    }
+  }
+  window.knTrack = ev;
+  window.knEvento = ev; // compatibilidade
 
   // vistas de conteúdo-chave (pelo caminho)
   var p = location.pathname;
@@ -261,7 +300,8 @@
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a, button'); if (!a) return;
     var h = (a.getAttribute && a.getAttribute('href')) || '';
-    if (h.indexOf('onde-comprar') > -1) ev('clique_onde_comprar', { origem: p });
+    if (h.indexOf('wa.me') > -1 || h.indexOf('whatsapp') > -1) ev('clique_whatsapp', { origem: p });
+    else if (h.indexOf('onde-comprar') > -1) ev('clique_onde_comprar', { origem: p });
     else if (h.indexOf('profissionais') > -1) ev('clique_profissionais', { origem: p });
     else if (h.indexOf('tel:') === 0) ev('clique_telefone', { numero: h.slice(4) });
     else if (h.indexOf('mailto:') === 0) ev('clique_email');
@@ -276,10 +316,30 @@
     }
   }, true);
 
-  // envio de formulários
+  // envio de formulários (profissionais = Lead B2B; novidades = captura de email)
   document.addEventListener('submit', function (e) {
     var f = e.target; if (!f || !f.getAttribute) return;
     var nome = f.getAttribute('name') || 'form';
     ev('form_' + nome, { pagina: p });
+    if (nome === 'profissionais') ev('generate_lead', { form: nome, pagina: p });
+    if (nome === 'novidades') ev('email_signup', { form: nome, pagina: p });
   }, true);
+})();
+
+/* ---------- WhatsApp discreto no rodapé (mensagem distinta consumidor/B2B) ---------- */
+(function () {
+  var EN = document.documentElement.lang === 'en' || location.pathname.indexOf('/en/') > -1;
+  var B2B = /profissionais/.test(location.pathname);
+  var msg = EN
+    ? (B2B ? 'Hello! I would like to talk about EKOOLOGY for my business (sample or quote).'
+           : 'Hello! I have a question about EKOOLOGY biochar.')
+    : (B2B ? 'Olá! Gostava de falar sobre EKOOLOGY para o meu negócio (amostra ou cotação).'
+           : 'Olá! Tenho uma questão sobre o biocarvão EKOOLOGY.');
+  var url = 'https://wa.me/351925969526?text=' + encodeURIComponent(msg);
+  document.querySelectorAll('footer a[href^="tel:"]').forEach(function (a) {
+    var li = a.closest('li'); if (!li || li.parentNode.querySelector('.kn-whats')) return;
+    var novo = document.createElement('li');
+    novo.innerHTML = '<a class="kn-whats" href="' + url + '" target="_blank" rel="noopener">WhatsApp: +351 925 969 526</a>';
+    li.parentNode.insertBefore(novo, li.nextSibling);
+  });
 })();
