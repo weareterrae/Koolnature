@@ -193,7 +193,7 @@
    Escolha guardada em localStorage kn-consent: 'sim' | 'nao'. "knCookies()" reabre o aviso. */
 (function () {
   var GA4_ID = 'G-W2JRWTQE5V';
-  var PIXEL_ID = ''; // ⚠️ Meta Pixel ainda não criado — preencher aqui quando existir
+  var PIXEL_ID = '1049281487617183'; // Meta Pixel "KoolNature Web" (portefólio Ekoology Biologic Charcoal)
 
   var EN = document.documentElement.lang === 'en' || location.pathname.indexOf('/en/') > -1;
   var T = EN ? {
