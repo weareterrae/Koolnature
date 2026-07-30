@@ -123,61 +123,58 @@
     document.querySelectorAll(".num b").forEach((el) => ioNum.observe(el));
   }
 
-  /* ---------- 5. Brasas a flutuar no hero ---------- */
+  /* ---------- 5. Brasas no hero (CSS puro) ----------
+     A camada só é criada em desktop (≥840px) e sem reduced motion:
+     em mobile/reduced nem sequer existe no DOM. Animação 100% CSS. */
   const hero = document.querySelector(".hero");
-  if (hero && !reduzMotion) {
-    const c = document.createElement("canvas");
-    c.className = "hero-brasas";
-    hero.appendChild(c);
-    const ctx = c.getContext("2d");
-    let W, H, particulas = [], ativo = true;
+  if (hero && window.matchMedia("(min-width: 840px) and (prefers-reduced-motion: no-preference)").matches) {
+    const camada = document.createElement("div");
+    camada.className = "hero-brasas";
+    camada.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 5; i++) camada.appendChild(document.createElement("i"));
+    hero.appendChild(camada);
+  }
 
-    const dimensiona = () => {
-      W = c.width = hero.offsetWidth;
-      H = c.height = hero.offsetHeight;
-    };
-    dimensiona();
-    window.addEventListener("resize", dimensiona);
-
-    const nova = () => ({
-      x: Math.random() * W,
-      y: H + 10,
-      r: 0.8 + Math.random() * 2.2,
-      vy: 0.3 + Math.random() * 0.9,
-      vx: (Math.random() - 0.5) * 0.4,
-      vida: 0,
-      max: 300 + Math.random() * 300,
-    });
-    for (let i = 0; i < 26; i++) {
-      const p = nova();
-      p.y = Math.random() * H;
-      p.vida = Math.random() * p.max;
-      particulas.push(p);
-    }
-    const desenha = () => {
-      if (!ativo) return;
-      ctx.clearRect(0, 0, W, H);
-      particulas.forEach((p, i) => {
-        p.y -= p.vy;
-        p.x += p.vx + Math.sin((p.vida + i * 40) / 60) * 0.3;
-        p.vida++;
-        const alfa = Math.max(0, 0.55 * (1 - p.vida / p.max));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(242, 122, 40, ${alfa})`;
-        ctx.shadowColor = "rgba(242, 92, 27, 0.8)";
-        ctx.shadowBlur = 6;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        if (p.vida > p.max || p.y < -10) particulas[i] = nova();
+  /* ---------- 5c. "Da acácia à brasa": o fio que arde ----------
+     Progresso do scroll na secção .historia → --fio-p (0–1) que queima
+     o carril de verde-floresta a âmbar; cada etapa acende ao passar.
+     Listener passivo + rAF, ligado só quando a secção está por perto. */
+  const historia = document.querySelector(".historia");
+  const fio = historia && historia.querySelector(".fio");
+  if (fio && !reduzMotion && "IntersectionObserver" in window) {
+    historia.classList.add("hx-js");
+    const etapas = [...fio.querySelectorAll(".etapa")];
+    let pedido = false;
+    const mede = () => {
+      pedido = false;
+      const r = fio.getBoundingClientRect();
+      const linha = window.innerHeight * 0.72;
+      const p = Math.min(1, Math.max(0, (linha - r.top) / r.height));
+      fio.style.setProperty("--fio-p", p.toFixed(4));
+      etapas.forEach((et) => {
+        et.classList.toggle("acesa", et.getBoundingClientRect().top + 20 < linha);
       });
-      requestAnimationFrame(desenha);
     };
-    desenha();
-    document.addEventListener("visibilitychange", () => {
-      ativo = !document.hidden;
-      if (ativo) desenha();
-    });
+    const aoRolar = () => {
+      if (!pedido) { pedido = true; requestAnimationFrame(mede); }
+    };
+    const ioFio = new IntersectionObserver(
+      (entradas) => {
+        entradas.forEach((e) => {
+          if (e.isIntersecting) {
+            window.addEventListener("scroll", aoRolar, { passive: true });
+            window.addEventListener("resize", aoRolar, { passive: true });
+            aoRolar();
+          } else {
+            window.removeEventListener("scroll", aoRolar);
+            window.removeEventListener("resize", aoRolar);
+          }
+        });
+      },
+      { rootMargin: "25% 0px 25% 0px" }
+    );
+    ioFio.observe(historia);
+    mede();
   }
 
   /* ---------- 5b. Vídeo do hero: respeitar reduced motion ---------- */
