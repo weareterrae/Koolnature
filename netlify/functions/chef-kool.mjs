@@ -1,7 +1,7 @@
 /* Chef Kool — cérebro de IA (Netlify Function)
-   Recebe o histórico da conversa do widget e responde via API da Anthropic
+   Recebe o histórico da conversa do widget e responde via Gemini (AI Gateway da Netlify)
    com todo o conhecimento da marca embebido (conhecimento.mjs).
-   Requer a variável de ambiente ANTHROPIC_API_KEY definida na Netlify. */
+   Requer a variável de ambiente GEMINI_API_KEY (injetada pelo gateway). */
 
 import CONHECIMENTO from "./lib/conhecimento.mjs";
 
@@ -29,9 +29,11 @@ REGRAS
 7. Segurança sempre: nunca acender com álcool ou gasolina; brasa em local ventilado; carvão nunca dentro de casa.
 
 CAPTAÇÃO DE CONTACTO (representa a marca, não és só um FAQ)
+   MODELO DE VENDA (facto): a KoolNature NÃO faz fornecimento direto nem entregas próprias — toda a venda passa pelos DISTRIBUIDORES da rede (e pelo Aldi). Nunca prometas entrega ou fornecimento direto da marca, nem preços.
 8. Deteta INTENÇÃO comercial e ajuda a fechar o próximo passo, com naturalidade de anfitrião:
-   - PROFISSIONAL (restaurante, churrasqueira, hotelaria, revenda, distribuição, marca própria, exportação, agricultura/KOOLBIOCHAR, "quero vender", "pedir amostra", "cotação", "preço por grosso"): responde ao que perguntou E oferece pôr a equipa em contacto. Ex.: "Queres que a nossa equipa te fale sobre isso? Deixa-me só o teu nome e um contacto (email ou telemóvel) e tratamos já."
-   - CONSUMIDOR cuja ZONA NÃO está coberta por distribuidor: em vez de só mandar o email, oferece recolher o contacto — "Ainda não temos distribuidor aí, mas se me deixares nome e contacto, a equipa indica-te o ponto mais próximo assim que houver."
+   - RESTAURANTE / HORECA / GRANDE CONSUMO (restaurante, churrasqueira, hotelaria, "X sacos por mês", "preço por grosso"): mostra o argumento profissional (rende mais 20-30%, brasa estável sem paragens no serviço, acende em 15-20 min e — por fazer muito menos fumo — deixa os filtros/hotte de extração muito mais limpos, logo menos limpezas e manutenção) e encaminha para o DISTRIBUIDOR da zona, que trata de preço e entrega. Se a zona estiver coberta, dá o distribuidor (nome+telefone); se não estiver clara, oferece recolher o contacto para a equipa indicar o distribuidor certo.
+   - PARCEIRO DE NEGÓCIO (quer VENDER EKOOLOGY: revenda, distribuição, marca própria, exportação, agricultura/KOOLBIOCHAR): AÍ o contacto é direto com a marca — oferece recolher nome+contacto. Ex.: "Boa! Deixa-me o teu nome e um contacto (email ou telemóvel) que a nossa equipa te fala sobre parceria."
+   - CONSUMIDOR cuja ZONA NÃO está coberta por distribuidor: oferece recolher o contacto — "Ainda não temos distribuidor aí, mas se me deixares nome e contacto, a equipa indica-te o ponto mais próximo."
 9. QUANDO a pessoa CONCORDAR e te DER os dados (nome + email ou telemóvel), faz DUAS coisas:
    a) confirma com calor humano numa frase ("Ficou registado, {nome}! A equipa fala contigo em breve. 🔥");
    b) acrescenta, na ÚLTIMA linha e SÓ ela, EXATAMENTE este marcador (o site trata dele; NUNCA o expliques nem o mostres como texto normal):
@@ -52,7 +54,7 @@ async function planoBGemini(system, mensagens, maxTokens) {
   const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
   if (!chave || !base) return null;
   try {
-    const r = await fetch(`${base}/v1beta/models/gemini-2.5-flash:generateContent`, {
+    const r = await fetch(`${base}/v1beta/models/gemini-flash-latest:generateContent`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-goog-api-key": chave },
       body: JSON.stringify({
@@ -61,7 +63,7 @@ async function planoBGemini(system, mensagens, maxTokens) {
           role: m.role === "assistant" ? "model" : "user",
           parts: [{ text: typeof m.content === "string" ? m.content : "" }],
         })),
-        generationConfig: { maxOutputTokens: maxTokens },
+        generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024) },
       }),
     });
     if (!r.ok) { console.error("chef-kool: Gemini", r.status, (await r.text()).slice(0, 200)); return null; }
@@ -144,7 +146,7 @@ export default async (req, context) => {
   const limite = excedeuLimites(ip);
   if (limite) return json({ erro: "Calma, chef! Muitos pedidos seguidos — dá-me um instante e tenta de novo. 🔥" }, 429);
 
-  const chave = process.env.ANTHROPIC_API_KEY;
+  const chave = process.env.GEMINI_API_KEY;
   if (!chave) return json({ resposta: CONTINGENCIA });
 
   let corpo;
@@ -173,56 +175,8 @@ export default async (req, context) => {
   if (!mensagens.length || mensagens[mensagens.length - 1].role !== "user")
     return json({ erro: "Falta a pergunta" }, 400);
 
-  // Netlify AI Gateway injeta ANTHROPIC_API_KEY + ANTHROPIC_BASE_URL;
-  // uma chave própria definida no site sobrepõe-se e usa a API direta.
-  const base = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
-
-  let resposta;
-  try {
-    const pedirClaude = () => fetch(`${base}/v1/messages`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": chave,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-opus-4-8",
-        max_tokens: 600,
-        system: [
-          { type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } },
-        ],
-        messages: mensagens,
-      }),
-    });
-    resposta = await pedirClaude();
-    // As rajadas de 429 do gateway duram ~1s — uma segunda tentativa resolve quase sempre.
-    if (!resposta.ok && (resposta.status === 429 || resposta.status >= 500)) {
-      console.error("chef-kool: Anthropic", resposta.status, "→ retry em 1.2s");
-      await new Promise((res) => setTimeout(res, 1200));
-      resposta = await pedirClaude();
-    }
-  } catch (e) {
-    console.error("chef-kool: falha de rede para a Anthropic", e);
-    const b = await planoBGemini(SYSTEM, mensagens, 600);
-    return json({ resposta: b || CONTINGENCIA });
-  }
-
-  if (!resposta.ok) {
-    console.error("chef-kool: Anthropic", resposta.status, await resposta.text());
-    const b = await planoBGemini(SYSTEM, mensagens, 600);
-    return json({ resposta: b || CONTINGENCIA });
-  }
-
-  const dados = await resposta.json();
-  const texto = (dados.content || [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text)
-    .join("\n")
-    .trim();
-
-  if (!texto) return json({ erro: "Sem resposta" }, 502);
-  return json({ resposta: texto });
+  const b = await planoBGemini(SYSTEM, mensagens, 600);
+  return json({ resposta: b || CONTINGENCIA });
 };
 
 export const config = { path: "/api/chef-kool" };
