@@ -76,6 +76,32 @@ async function planoBGemini(system, mensagens, maxTokens) {
   }
 }
 
+// REDE DE SEGURANÇA: se o Gemini falhar, tenta o Claude (via gateway Netlify:
+// ANTHROPIC_API_KEY + ANTHROPIC_BASE_URL injetados). Devolve texto ou null.
+async function redeClaude(system, mensagens, maxTokens) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  if (!chave) return null;
+  const base = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
+  const pedir = () => fetch(`${base}/v1/messages`, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-api-key": chave, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({
+      model: "claude-opus-4-8",
+      max_tokens: maxTokens,
+      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+      messages: mensagens,
+    }),
+  });
+  try {
+    let r = await pedir();
+    if (!r.ok && (r.status === 429 || r.status >= 500)) { await new Promise((s) => setTimeout(s, 1200)); r = await pedir(); }
+    if (!r.ok) { console.error("chef-kool: Claude(rede)", r.status); return null; }
+    const j = await r.json();
+    const t = (j?.content || []).map((p) => p.text || "").join("").trim();
+    return t || null;
+  } catch (e) { console.error("chef-kool: Claude(rede) falha de rede", e); return null; }
+}
+
 // Modo de contingência: quando a IA não está disponível, o Chef Kool responde
 // com os encaminhamentos essenciais em vez de um erro.
 const CONTINGENCIA =
@@ -146,8 +172,7 @@ export default async (req, context) => {
   const limite = excedeuLimites(ip);
   if (limite) return json({ erro: "Calma, chef! Muitos pedidos seguidos — dá-me um instante e tenta de novo. 🔥" }, 429);
 
-  const chave = process.env.GEMINI_API_KEY;
-  if (!chave) return json({ resposta: CONTINGENCIA });
+  if (!process.env.GEMINI_API_KEY && !process.env.ANTHROPIC_API_KEY) return json({ resposta: CONTINGENCIA });
 
   let corpo;
   try {
@@ -175,8 +200,9 @@ export default async (req, context) => {
   if (!mensagens.length || mensagens[mensagens.length - 1].role !== "user")
     return json({ erro: "Falta a pergunta" }, 400);
 
-  const b = await planoBGemini(SYSTEM, mensagens, 600);
-  return json({ resposta: b || CONTINGENCIA });
+  let r = await planoBGemini(SYSTEM, mensagens, 600);     // principal: Gemini
+  if (!r) r = await redeClaude(SYSTEM, mensagens, 600);   // rede de segurança: Claude
+  return json({ resposta: r || CONTINGENCIA });
 };
 
 export const config = { path: "/api/chef-kool" };
