@@ -54,7 +54,7 @@ async function planoBGemini(system, mensagens, maxTokens) {
   const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
   if (!chave || !base) return null;
   try {
-    const r = await fetch(`${base}/v1beta/models/gemini-flash-latest:generateContent`, {
+    const r = await fetch(`${base}/v1beta/models/gemini-2.5-pro:generateContent`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-goog-api-key": chave },
       body: JSON.stringify({
@@ -63,7 +63,7 @@ async function planoBGemini(system, mensagens, maxTokens) {
           role: m.role === "assistant" ? "model" : "user",
           parts: [{ text: typeof m.content === "string" ? m.content : "" }],
         })),
-        generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024) },
+        generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024), thinkingConfig: { thinkingBudget: 128 } },
       }),
     });
     if (!r.ok) { console.error("chef-kool: Gemini", r.status, (await r.text()).slice(0, 200)); return null; }
