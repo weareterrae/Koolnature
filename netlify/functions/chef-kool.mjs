@@ -51,6 +51,10 @@ const json = (obj, status = 200) =>
 // Google (503 sobrecarga / 429 / 5xx / timeout): repete com recuo antes de
 // desistir, e aceita uma 2ª chave (GEMINI_API_KEY_2). Se ainda assim falhar, o
 // handler cai para a rede de segurança (Claude). Devolve texto ou null.
+// Modelos por ordem de preferência. gemini-2.5-pro foi RETIRADO pela Google
+// ("no longer available to new users", 404), por isso usamos modelos atuais e,
+// se um 404/falhar, passamos automaticamente ao seguinte.
+const GEMINI_MODELOS = ["gemini-flash-latest", "gemini-2.0-flash"];
 const GEMINI_TRANSITORIOS = new Set([408, 425, 429, 500, 502, 503, 504]);
 const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -64,30 +68,32 @@ async function planoBGemini(system, mensagens, maxTokens) {
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: typeof m.content === "string" ? m.content : "" }],
     })),
-    generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024), thinkingConfig: { thinkingBudget: 128 } },
+    generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024) },
   });
   for (const chave of chaves) {
-    for (let tentativa = 0; tentativa < 3; tentativa++) {
-      try {
-        const r = await fetch(`${base}/v1beta/models/gemini-2.5-pro:generateContent`, {
-          method: "POST",
-          headers: { "content-type": "application/json", "x-goog-api-key": chave },
-          body: corpo,
-        });
-        if (!r.ok) {
-          const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
-          err.status = r.status;
-          throw err;
+    for (const modelo of GEMINI_MODELOS) {
+      for (let tentativa = 0; tentativa < 3; tentativa++) {
+        try {
+          const r = await fetch(`${base}/v1beta/models/${modelo}:generateContent`, {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-goog-api-key": chave },
+            body: corpo,
+          });
+          if (!r.ok) {
+            const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
+            err.status = r.status;
+            throw err;
+          }
+          const j = await r.json();
+          const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+          if (texto) return texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
+          break; // resposta vazia → passa ao modelo seguinte
+        } catch (e) {
+          const transitorio = GEMINI_TRANSITORIOS.has(e.status) || e.name === "AbortError" || !e.status;
+          console.error(`chef-kool: Gemini ${modelo} tentativa ${tentativa + 1} ·`, (e && e.message) || e);
+          if (!transitorio) break; // permanente (ex.: 404 modelo retirado) → passa ao modelo seguinte
+          if (tentativa < 2) await pausa(400 * (tentativa + 1)); // recuo: 400ms, 800ms
         }
-        const j = await r.json();
-        const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
-        if (texto) return texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
-        return null; // resposta vazia → deixa a rede Claude assumir
-      } catch (e) {
-        const transitorio = GEMINI_TRANSITORIOS.has(e.status) || e.name === "AbortError" || !e.status;
-        console.error(`chef-kool: Gemini tentativa ${tentativa + 1} ·`, (e && e.message) || e);
-        if (!transitorio) break; // erro permanente (400/401/403/404) → passa à chave seguinte
-        if (tentativa < 2) await pausa(400 * (tentativa + 1)); // recuo: 400ms, 800ms
       }
     }
   }
