@@ -55,10 +55,35 @@ const json = (obj, status = 200) =>
 // ("no longer available to new users", 404), por isso usamos modelos atuais e,
 // se um 404/falhar, passamos automaticamente ao seguinte.
 const GEMINI_MODELOS = ["gemini-flash-latest", "gemini-2.0-flash"];
-const GEMINI_TRANSITORIOS = new Set([408, 425, 429, 500, 502, 503, 504]);
-const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function planoBGemini(system, mensagens, maxTokens) {
+// ORÇAMENTO DE TEMPO (crítico). As Netlify Functions síncronas e o browser
+// desistem ao fim de poucos segundos; se ficarmos pendurados à espera de um
+// upstream lento (ex.: Gemini 503 de sobrecarga sem timeout), o widget parece
+// "em baixo". Por isso: cada fetch tem timeout próprio E há um prazo global.
+// Preferimos falhar DEPRESSA para o modelo/rede seguinte, e no limite para a
+// mensagem de contingência, a ficar à espera.
+const DEADLINE_MS = Number(process.env.CHEF_DEADLINE_MS || 9000); // teto total da função
+const GEMINI_BUDGET_MS = 3500; // tempo máximo gasto no conjunto de tentativas Gemini
+const GEMINI_CALL_MS = 3000;   // timeout por chamada ao Gemini
+const CLAUDE_CALL_MS = 5500;   // timeout por chamada ao Claude (rede de segurança fiável)
+
+// fetch com timeout via AbortController; nunca pendura mais do que `ms`.
+async function fetchTimeout(url, opts, ms) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), Math.max(ms, 1));
+  try {
+    return await fetch(url, { ...opts, signal: ac.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+// Gemini (via gateway Netlify). Falha RÁPIDA: uma tentativa por modelo e por
+// chave, cada uma com timeout, tudo dentro de `prazo` (timestamp absoluto).
+// Perante 503 de sobrecarga ou timeout, passa já ao modelo/chave seguinte — não
+// vale a pena martelar um modelo sobrecarregado; o Claude é a rede de segurança.
+// Devolve texto ou null.
+async function planoBGemini(system, mensagens, maxTokens, prazo) {
   const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
   const chaves = [process.env.GEMINI_API_KEY, process.env.GEMINI_API_KEY_2].filter(Boolean);
   if (!chaves.length) return null;
@@ -72,28 +97,26 @@ async function planoBGemini(system, mensagens, maxTokens) {
   });
   for (const chave of chaves) {
     for (const modelo of GEMINI_MODELOS) {
-      for (let tentativa = 0; tentativa < 3; tentativa++) {
-        try {
-          const r = await fetch(`${base}/v1beta/models/${modelo}:generateContent`, {
-            method: "POST",
-            headers: { "content-type": "application/json", "x-goog-api-key": chave },
-            body: corpo,
-          });
-          if (!r.ok) {
-            const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
-            err.status = r.status;
-            throw err;
-          }
-          const j = await r.json();
-          const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
-          if (texto) return texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
-          break; // resposta vazia → passa ao modelo seguinte
-        } catch (e) {
-          const transitorio = GEMINI_TRANSITORIOS.has(e.status) || e.name === "AbortError" || !e.status;
-          console.error(`chef-kool: Gemini ${modelo} tentativa ${tentativa + 1} ·`, (e && e.message) || e);
-          if (!transitorio) break; // permanente (ex.: 404 modelo retirado) → passa ao modelo seguinte
-          if (tentativa < 2) await pausa(400 * (tentativa + 1)); // recuo: 400ms, 800ms
+      const restante = prazo - Date.now();
+      if (restante < 500) return null; // sem tempo útil → deixa a rede de segurança tentar
+      try {
+        const r = await fetchTimeout(`${base}/v1beta/models/${modelo}:generateContent`, {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-goog-api-key": chave },
+          body: corpo,
+        }, Math.min(GEMINI_CALL_MS, restante));
+        if (!r.ok) {
+          const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
+          err.status = r.status;
+          throw err;
         }
+        const j = await r.json();
+        const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+        if (texto) return texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
+        // resposta vazia → passa ao modelo/chave seguinte
+      } catch (e) {
+        // 503/429/timeout/404 — qualquer falha → falha rápida para o seguinte.
+        console.error(`chef-kool: Gemini ${modelo} ·`, (e && e.message) || e);
       }
     }
   }
@@ -102,11 +125,11 @@ async function planoBGemini(system, mensagens, maxTokens) {
 
 // REDE DE SEGURANÇA: se o Gemini falhar, tenta o Claude (via gateway Netlify:
 // ANTHROPIC_API_KEY + ANTHROPIC_BASE_URL injetados). Devolve texto ou null.
-async function redeClaude(system, mensagens, maxTokens) {
+async function redeClaude(system, mensagens, maxTokens, prazo) {
   const chave = process.env.ANTHROPIC_API_KEY;
   if (!chave) return null;
   const base = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
-  const pedir = () => fetch(`${base}/v1/messages`, {
+  const pedir = (ms) => fetchTimeout(`${base}/v1/messages`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-api-key": chave, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
@@ -115,15 +138,20 @@ async function redeClaude(system, mensagens, maxTokens) {
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: mensagens,
     }),
-  });
+  }, ms);
   try {
-    let r = await pedir();
-    if (!r.ok && (r.status === 429 || r.status >= 500)) { await new Promise((s) => setTimeout(s, 1200)); r = await pedir(); }
+    let restante = prazo - Date.now();
+    if (restante < 800) return null; // sem tempo → cai para contingência
+    let r = await pedir(Math.min(CLAUDE_CALL_MS, restante));
+    // uma repetição rápida só se sobrar tempo folgado (evita segundo pendura).
+    if (!r.ok && (r.status === 429 || r.status >= 500) && (prazo - Date.now()) > 1800) {
+      r = await pedir(Math.min(CLAUDE_CALL_MS, prazo - Date.now()));
+    }
     if (!r.ok) { console.error("chef-kool: Claude(rede)", r.status); return null; }
     const j = await r.json();
     const t = (j?.content || []).map((p) => p.text || "").join("").trim();
     return t || null;
-  } catch (e) { console.error("chef-kool: Claude(rede) falha de rede", e); return null; }
+  } catch (e) { console.error("chef-kool: Claude(rede) falha de rede", (e && e.message) || e); return null; }
 }
 
 // Modo de contingência: quando a IA não está disponível, o Chef Kool responde
@@ -224,8 +252,14 @@ export default async (req, context) => {
   if (!mensagens.length || mensagens[mensagens.length - 1].role !== "user")
     return json({ erro: "Falta a pergunta" }, 400);
 
-  let r = await planoBGemini(SYSTEM, mensagens, 600);     // principal: Gemini
-  if (!r) r = await redeClaude(SYSTEM, mensagens, 600);   // rede de segurança: Claude
+  // Orçamento de tempo: o Gemini tem uma fatia curta (falha rápida se estiver
+  // sobrecarregado); o Claude fica com o resto até ao prazo total. Assim a
+  // função devolve SEMPRE algo dentro de ~DEADLINE_MS, nunca fica pendurada.
+  const inicio = Date.now();
+  const prazoGemini = inicio + GEMINI_BUDGET_MS;
+  const prazoTotal = inicio + DEADLINE_MS;
+  let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
+  if (!r) r = await redeClaude(SYSTEM, mensagens, 600, prazoTotal);  // rede de segurança: Claude
   return json({ resposta: r || CONTINGENCIA });
 };
 

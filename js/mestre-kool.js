@@ -121,11 +121,17 @@
 
   async function respostaIA() {
     if (!iaDisponivel) return null;
+    // Timeout de segurança: a função do servidor devolve sempre algo em ~9s;
+    // se por algum motivo passar disso, desistimos e caímos no modo local em
+    // vez de deixar o balão a rodar indefinidamente.
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), 11000);
     try {
       const r = await fetch("/api/chef-kool", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ historico: historico.slice(-12) }),
+        signal: ac.signal,
       });
       if (r.status === 503) {
         iaDisponivel = false; // IA por configurar → ficar no modo local
@@ -137,7 +143,9 @@
         ? dados.resposta.trim()
         : null;
     } catch {
-      return null; // offline / erro de rede → modo local
+      return null; // offline / erro de rede / timeout → modo local
+    } finally {
+      clearTimeout(t);
     }
   }
 
