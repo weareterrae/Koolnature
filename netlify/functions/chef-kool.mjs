@@ -47,33 +47,51 @@ const json = (obj, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8" },
   });
 
-// PLANO B: se o Claude falhar (erro/429), tenta o Gemini — pelo MESMO gateway da
-// Netlify (GEMINI_API_KEY + GOOGLE_GEMINI_BASE_URL injetados; sem chaves pessoais).
+// PLANO A: Gemini (via gateway Netlify). Resiliente a soluços TRANSITÓRIOS da
+// Google (503 sobrecarga / 429 / 5xx / timeout): repete com recuo antes de
+// desistir, e aceita uma 2ª chave (GEMINI_API_KEY_2). Se ainda assim falhar, o
+// handler cai para a rede de segurança (Claude). Devolve texto ou null.
+const GEMINI_TRANSITORIOS = new Set([408, 425, 429, 500, 502, 503, 504]);
+const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function planoBGemini(system, mensagens, maxTokens) {
-  const chave = process.env.GEMINI_API_KEY;
   const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
-  if (!chave || !base) return null;
-  try {
-    const r = await fetch(`${base}/v1beta/models/gemini-2.5-pro:generateContent`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-goog-api-key": chave },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: system }] },
-        contents: mensagens.map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: typeof m.content === "string" ? m.content : "" }],
-        })),
-        generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024), thinkingConfig: { thinkingBudget: 128 } },
-      }),
-    });
-    if (!r.ok) { console.error("chef-kool: Gemini", r.status, (await r.text()).slice(0, 200)); return null; }
-    const j = await r.json();
-    const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
-    return texto ? texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2") : null;
-  } catch (e) {
-    console.error("chef-kool: Gemini falha de rede", e);
-    return null;
+  const chaves = [process.env.GEMINI_API_KEY, process.env.GEMINI_API_KEY_2].filter(Boolean);
+  if (!chaves.length) return null;
+  const corpo = JSON.stringify({
+    system_instruction: { parts: [{ text: system }] },
+    contents: mensagens.map((m) => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: typeof m.content === "string" ? m.content : "" }],
+    })),
+    generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024), thinkingConfig: { thinkingBudget: 128 } },
+  });
+  for (const chave of chaves) {
+    for (let tentativa = 0; tentativa < 3; tentativa++) {
+      try {
+        const r = await fetch(`${base}/v1beta/models/gemini-2.5-pro:generateContent`, {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-goog-api-key": chave },
+          body: corpo,
+        });
+        if (!r.ok) {
+          const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
+          err.status = r.status;
+          throw err;
+        }
+        const j = await r.json();
+        const texto = (j?.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+        if (texto) return texto.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
+        return null; // resposta vazia → deixa a rede Claude assumir
+      } catch (e) {
+        const transitorio = GEMINI_TRANSITORIOS.has(e.status) || e.name === "AbortError" || !e.status;
+        console.error(`chef-kool: Gemini tentativa ${tentativa + 1} ·`, (e && e.message) || e);
+        if (!transitorio) break; // erro permanente (400/401/403/404) → passa à chave seguinte
+        if (tentativa < 2) await pausa(400 * (tentativa + 1)); // recuo: 400ms, 800ms
+      }
+    }
   }
+  return null;
 }
 
 // REDE DE SEGURANÇA: se o Gemini falhar, tenta o Claude (via gateway Netlify:
