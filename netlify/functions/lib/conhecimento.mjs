@@ -41,8 +41,10 @@ export default {
     },
     "pellets": {
       "nome": "Pellets EKOOLOGY",
-      "certificacao": "ENplus A1",
-      "uso": "Recuperadores, salamandras e caldeiras — aquecimento doméstico e industrial"
+      "material": "Madeira de pinho (serrim), 100% portuguesa",
+      "certificacao": "ENplus A1 — pellets domésticos certificados",
+      "uso": "Recuperadores, salamandras e caldeiras — aquecimento doméstico certificado",
+      "formatos": "Saco 15 kg ou palete doméstica"
     },
     "koolbiochar": {
       "nome": "KOOLBIOCHAR",
