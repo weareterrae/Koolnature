@@ -57,7 +57,9 @@ const json = (obj, status = 200) =>
 // Modelos por ordem de preferência. gemini-2.5-pro foi RETIRADO pela Google
 // ("no longer available to new users", 404), por isso usamos modelos atuais e,
 // se um 404/falhar, passamos automaticamente ao seguinte.
-const GEMINI_MODELOS = ["gemini-flash-latest", "gemini-2.0-flash"];
+// Ordem: 2.0-flash primeiro (estável); flash-latest tem tido picos de sobrecarga (503/lento)
+// que queimavam o orçamento inteiro e nem deixavam tentar o segundo modelo.
+const GEMINI_MODELOS = ["gemini-2.0-flash", "gemini-flash-latest"];
 
 // ORÇAMENTO DE TEMPO (crítico). As Netlify Functions síncronas e o browser
 // desistem ao fim de poucos segundos; se ficarmos pendurados à espera de um
