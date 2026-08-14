@@ -70,7 +70,7 @@ const GEMINI_MODELOS = ["gemini-flash-latest", "gemini-flash-lite-latest"];
 const DEADLINE_MS = Number(process.env.CHEF_DEADLINE_MS || 9000); // teto total da função
 const GEMINI_BUDGET_MS = 2500; // tempo máximo gasto no conjunto de tentativas Gemini (falha rápida: a rede de segurança precisa de folga)
 const GEMINI_CALL_MS = 3000;   // timeout por chamada ao Gemini
-const CLAUDE_CALL_MS = 5500;   // timeout por chamada ao Claude (rede de segurança fiável)
+const CLAUDE_CALL_MS = 6300;   // timeout por chamada ao Claude (janela quase toda: 9000 - 2500 do Gemini - margem)
 
 // fetch com timeout via AbortController; nunca pendura mais do que `ms`.
 async function fetchTimeout(url, opts, ms) {
@@ -265,7 +265,9 @@ export default async (req, context) => {
   const prazoTotal = inicio + DEADLINE_MS;
   let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
   const viaGemini = !!r;
-  if (!r) r = await redeClaude(SYSTEM, mensagens, 600, prazoTotal);  // rede de segurança: Claude
+  // Rede de segurança com resposta mais curta (320 tokens): com o cérebro de ~30KB,
+  // 600 tokens não cabiam na janela e o pedido abortava a meio da geração.
+  if (!r) r = await redeClaude(SYSTEM, mensagens, 320, prazoTotal);
   // Diagnóstico só a pedido (corpo.debug=true): não expõe nada sensível, ajuda a ver
   // por onde passou o pedido quando a resposta cai na contingência.
   const extra = corpo?.debug === true
