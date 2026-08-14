@@ -154,8 +154,13 @@ async function redeClaude(system, mensagens, maxTokens, prazo) {
     }
     if (!r.ok) { console.error("chef-kool: Claude(rede)", r.status); return null; }
     const j = await r.json();
-    const t = (j?.content || []).map((p) => p.text || "").join("").trim();
-    return t || null;
+    let t = (j?.content || []).map((p) => p.text || "").join("").trim();
+    // Mesma higiene do caminho Gemini + regras da marca: sem markdown, sem travessões,
+    // e se o limite de tokens cortar a meio, termina na última frase completa.
+    t = t.replace(/\*\*/g, "").replace(/(^|\s)\*(\S)/g, "$1$2");
+    t = t.replace(/(\d)\s*[–—]\s*(\d)/g, "$1 a $2").replace(/\s*[—–]\s*/g, ", ");
+    if (j?.stop_reason === "max_tokens") { const fim = t.match(/^[\s\S]*[.!?…]/); if (fim) t = fim[0]; }
+    return t.trim() || null;
   } catch (e) { console.error("chef-kool: Claude(rede) falha de rede", (e && e.message) || e); return null; }
 }
 
@@ -265,9 +270,9 @@ export default async (req, context) => {
   const prazoTotal = inicio + DEADLINE_MS;
   let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
   const viaGemini = !!r;
-  // Rede de segurança com resposta mais curta (320 tokens): com o cérebro de ~30KB,
+  // Rede de segurança com resposta mais curta (380 tokens): com o cérebro de ~30KB,
   // 600 tokens não cabiam na janela e o pedido abortava a meio da geração.
-  if (!r) r = await redeClaude(SYSTEM, mensagens, 320, prazoTotal);
+  if (!r) r = await redeClaude(SYSTEM, mensagens, 380, prazoTotal);
   // Diagnóstico só a pedido (corpo.debug=true): não expõe nada sensível, ajuda a ver
   // por onde passou o pedido quando a resposta cai na contingência.
   const extra = corpo?.debug === true
