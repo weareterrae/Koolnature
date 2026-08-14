@@ -132,7 +132,7 @@ async function planoBGemini(system, mensagens, maxTokens, prazo) {
 // ANTHROPIC_API_KEY + ANTHROPIC_BASE_URL injetados). Devolve texto ou null.
 async function redeClaude(system, mensagens, maxTokens, prazo) {
   const chave = process.env.ANTHROPIC_API_KEY;
-  if (!chave) return null;
+  if (!chave) { console.error("chef-kool: Claude(rede) SEM ANTHROPIC_API_KEY — gateway de IA do Netlify desligado?"); return null; }
   const base = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
   const pedir = (ms) => fetchTimeout(`${base}/v1/messages`, {
     method: "POST",
@@ -264,8 +264,14 @@ export default async (req, context) => {
   const prazoGemini = inicio + GEMINI_BUDGET_MS;
   const prazoTotal = inicio + DEADLINE_MS;
   let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
+  const viaGemini = !!r;
   if (!r) r = await redeClaude(SYSTEM, mensagens, 600, prazoTotal);  // rede de segurança: Claude
-  return json({ resposta: r || CONTINGENCIA });
+  // Diagnóstico só a pedido (corpo.debug=true): não expõe nada sensível, ajuda a ver
+  // por onde passou o pedido quando a resposta cai na contingência.
+  const extra = corpo?.debug === true
+    ? { debug: { viaGemini, temClaudeKey: !!process.env.ANTHROPIC_API_KEY, ms: Date.now() - inicio } }
+    : {};
+  return json({ resposta: r || CONTINGENCIA, ...extra });
 };
 
 export const config = { path: "/api/chef-kool" };
