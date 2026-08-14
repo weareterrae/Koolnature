@@ -270,9 +270,10 @@ export default async (req, context) => {
   const prazoTotal = inicio + DEADLINE_MS;
   let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
   const viaGemini = !!r;
-  // Rede de segurança com resposta mais curta (380 tokens): com o cérebro de ~30KB,
-  // 600 tokens não cabiam na janela e o pedido abortava a meio da geração.
-  if (!r) r = await redeClaude(SYSTEM, mensagens, 380, prazoTotal);
+  // Rede de segurança com resposta curta (320 tokens): medido ao vivo, é o que cabe
+  // com folga na janela (380 já abortava no teto em noites lentas do gateway).
+  // O corte a meio de frase é aparado no redeClaude (termina na última frase completa).
+  if (!r) r = await redeClaude(SYSTEM, mensagens, 320, prazoTotal);
   // Diagnóstico só a pedido (corpo.debug=true): não expõe nada sensível, ajuda a ver
   // por onde passou o pedido quando a resposta cai na contingência.
   const extra = corpo?.debug === true
