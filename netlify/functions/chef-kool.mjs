@@ -57,9 +57,9 @@ const json = (obj, status = 200) =>
 // Modelos por ordem de preferência. gemini-2.5-pro foi RETIRADO pela Google
 // ("no longer available to new users", 404), por isso usamos modelos atuais e,
 // se um 404/falhar, passamos automaticamente ao seguinte.
-// Ordem: 2.0-flash primeiro (estável); flash-latest tem tido picos de sobrecarga (503/lento)
-// que queimavam o orçamento inteiro e nem deixavam tentar o segundo modelo.
-const GEMINI_MODELOS = ["gemini-2.0-flash", "gemini-flash-latest"];
+// gemini-2.0-flash foi RETIRADO pela Google (404 "no longer available") — não voltar a usá-lo.
+// flash-latest é o principal; flash-lite-latest é a alternativa rápida (se a chave não o tiver, 404 rápido e segue).
+const GEMINI_MODELOS = ["gemini-flash-latest", "gemini-flash-lite-latest"];
 
 // ORÇAMENTO DE TEMPO (crítico). As Netlify Functions síncronas e o browser
 // desistem ao fim de poucos segundos; se ficarmos pendurados à espera de um
@@ -68,7 +68,7 @@ const GEMINI_MODELOS = ["gemini-2.0-flash", "gemini-flash-latest"];
 // Preferimos falhar DEPRESSA para o modelo/rede seguinte, e no limite para a
 // mensagem de contingência, a ficar à espera.
 const DEADLINE_MS = Number(process.env.CHEF_DEADLINE_MS || 9000); // teto total da função
-const GEMINI_BUDGET_MS = 3500; // tempo máximo gasto no conjunto de tentativas Gemini
+const GEMINI_BUDGET_MS = 2500; // tempo máximo gasto no conjunto de tentativas Gemini (falha rápida: a rede de segurança precisa de folga)
 const GEMINI_CALL_MS = 3000;   // timeout por chamada ao Gemini
 const CLAUDE_CALL_MS = 5500;   // timeout por chamada ao Claude (rede de segurança fiável)
 
@@ -138,7 +138,7 @@ async function redeClaude(system, mensagens, maxTokens, prazo) {
     method: "POST",
     headers: { "content-type": "application/json", "x-api-key": chave, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-opus-4-8",
+      model: "claude-haiku-4-5-20251001", // rede de segurança tem de ser RÁPIDA: o Opus não cabe na janela de ~6s e abortava sempre
       max_tokens: maxTokens,
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: mensagens,
