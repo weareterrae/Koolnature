@@ -92,23 +92,26 @@ async function planoBGemini(system, mensagens, maxTokens, prazo) {
   const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
   const chaves = [process.env.GEMINI_API_KEY, process.env.GEMINI_API_KEY_2].filter(Boolean);
   if (!chaves.length) return null;
-  const corpo = JSON.stringify({
+  const corpoBase = {
     system_instruction: { parts: [{ text: system }] },
     contents: mensagens.map((m) => ({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: typeof m.content === "string" ? m.content : "" }],
     })),
-    generationConfig: { maxOutputTokens: Math.max(maxTokens, 1024) },
-  });
+  };
   for (const chave of chaves) {
     for (const modelo of GEMINI_MODELOS) {
       const restante = prazo - Date.now();
       if (restante < 500) return null; // sem tempo útil → deixa a rede de segurança tentar
       try {
+        // Modelos "pensantes" (2.5/latest): desligar o thinking — o raciocínio interno comia o
+        // orçamento (respostas cortadas) e segundos de latência (era a maior causa da lentidão).
+        const cfg = { maxOutputTokens: Math.max(maxTokens, 1024) };
+        if (/2\.5|latest/.test(modelo)) cfg.thinkingConfig = { thinkingBudget: 0 };
         const r = await fetchTimeout(`${base}/v1beta/models/${modelo}:generateContent`, {
           method: "POST",
           headers: { "content-type": "application/json", "x-goog-api-key": chave },
-          body: corpo,
+          body: JSON.stringify({ ...corpoBase, generationConfig: cfg }),
         }, Math.min(GEMINI_CALL_MS, restante));
         if (!r.ok) {
           const err = new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 200)}`);
