@@ -664,6 +664,22 @@ footer .base { border-top: 1px solid rgba(255, 255, 255, 0.12); margin-top: 44px
 @media (hover:hover) and (pointer:fine) { .mp-pin:hover .mp-ponto { transform: scale(1.25); } }
 .mapa-legenda { text-align: center; font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
 
+.mp-tooltip {
+  position: absolute; z-index: 20; transform: translate(-50%, -100%);
+  background: #fff; border: 1px solid var(--cinza-linha); border-radius: 10px;
+  padding: 9px 12px; min-width: 160px; max-width: 220px;
+  box-shadow: 0 10px 26px rgba(9,20,60,.16);
+  pointer-events: auto;
+}
+.mp-tooltip.dir-direita { transform: translate(-14px, -100%); }
+.mp-tooltip.dir-esquerda { transform: translate(calc(-100% + 14px), -100%); }
+.mp-tooltip-titulo { margin: 0 0 6px; font-size: 12px; font-weight: 800; color: var(--azul); text-transform: uppercase; letter-spacing: .03em; }
+.mp-tooltip ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.mp-tooltip li { display: flex; flex-direction: column; gap: 1px; font-size: 13px; }
+.mp-tooltip li strong { color: var(--ink); }
+.mp-tooltip li a { color: var(--brasa); font-weight: 700; text-decoration: none; font-size: 12.5px; }
+.mp-tooltip li a:hover { text-decoration: underline; }
+
 /* ---------- redes sociais ---------- */
 .sociais { display: flex; gap: 12px; margin-top: 18px; }
 .sociais a {
