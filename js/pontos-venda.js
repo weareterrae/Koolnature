@@ -3,7 +3,32 @@
    encontrada → convidar a contactar por email ou telemóvel. */
 (function () {
   var raiz = document.getElementById("rede-distribuidores");
-  if (!raiz || !window.PONTOS_VENDA) return;
+  if (!raiz) return;
+
+  // Diagnóstico visível: em vez de ficar em branco sem explicação (o que já
+  // aconteceu a um visitante e não deu para perceber a causa à distância),
+  // mostra o motivo diretamente na página — dá para ler e reportar-nos.
+  function diagnostico(motivo, erro) {
+    raiz.innerHTML =
+      '<p style="color:var(--ink-2);font-size:13.5px;text-align:center">' +
+      "Não consegui carregar a lista de distribuidores aqui — desculpa. " +
+      'Enquanto isso, contacta-nos: <a href="mailto:info@koolnature.pt">info@koolnature.pt</a> ou ' +
+      '<a href="tel:+351925969526">+351 925 969 526</a>.<br>' +
+      '<span style="opacity:.55;font-size:11px">(' + motivo + (erro ? " · " + erro : "") + ")</span></p>";
+  }
+
+  if (!window.PONTOS_VENDA) {
+    diagnostico("dados dos distribuidores não chegaram a carregar (pontos-venda-dados.js)");
+    return;
+  }
+
+  try {
+    iniciar();
+  } catch (e) {
+    diagnostico("erro ao construir o diretório", (e && e.name) + ": " + (e && e.message));
+  }
+
+  function iniciar() {
 
   var EN = document.documentElement.lang === "en" || location.pathname.includes("/en/");
   var T = EN ? {
@@ -69,4 +94,5 @@
 
   busca.addEventListener("input", function () { render(busca.value); });
   render("");
+  }
 })();
