@@ -651,6 +651,19 @@ footer .base { border-top: 1px solid rgba(255, 255, 255, 0.12); margin-top: 44px
 .pv-vazio { text-align: center; padding: 26px 0 6px; color: var(--ink-2); }
 .pv-vazio p { max-width: 52ch; margin: 0 auto 18px; }
 
+.mapa-wrap { max-width: 300px; margin: 0 auto 28px; }
+.mapa-distribuidores { display: block; width: 100%; height: auto; }
+.mp-distritos path { fill: var(--turquesa-claro); stroke: var(--azul); stroke-width: 0.7; stroke-opacity: .5; }
+.mp-pin { cursor: default; }
+.mp-ponto {
+  fill: var(--brasa); stroke: #fff; stroke-width: 1;
+  filter: drop-shadow(0 1px 2px rgba(242,92,27,.4));
+  transform-box: fill-box; transform-origin: center;
+  transition: transform .2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover:hover) and (pointer:fine) { .mp-pin:hover .mp-ponto { transform: scale(1.25); } }
+.mapa-legenda { text-align: center; font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+
 /* ---------- redes sociais ---------- */
 .sociais { display: flex; gap: 12px; margin-top: 18px; }
 .sociais a {
@@ -1048,6 +1061,7 @@ footer .wrap, footer .base { position: relative; z-index: 1; }
   .marquee-inner { animation: none; }
   .mood { background-attachment: scroll; }
   .btn:hover, .card:hover, .receita:hover, .num:hover, .produto:hover { transform: none; }
+  .mp-pin:hover .mp-ponto { transform: none; }
 }
 
 /* ---------- transições entre páginas (View Transitions API) ---------- */
