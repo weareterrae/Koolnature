@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+/* Apanhador de erros TEMPORÁRIO — ver onde-comprar.html (PT) para o motivo. */
+window.addEventListener("error", function (e) {
+  var d = document.createElement("div");
+  d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#c0392b;color:#fff;font:12px/1.4 monospace;padding:10px;white-space:pre-wrap;max-height:45vh;overflow:auto";
+  d.textContent = "ERRO JS: " + (e.message || "") + "\n@ " + (e.filename || "") + ":" + (e.lineno || "") + ":" + (e.colno || "");
+  document.documentElement.appendChild(d);
+});
+</script>
 <meta charset="UTF-8" />
 <meta name="facebook-domain-verification" content="6i9sxeo4aymj14sglh13ux31o5iuqj" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
