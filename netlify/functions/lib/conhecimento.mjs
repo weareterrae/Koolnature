@@ -71,6 +71,8 @@ export default {
         "localidade": "Caldas da Rainha",
         "telefone": "262 841 005",
         "zonas": "Caldas da Rainha e toda a zona, litoral e interior, desde Torres Vedras até Alcobaça, Cartaxo e Santarém",
+        "email": "antoniobairros@marques.pt",
+        "contacto": "António Bairros / 917 587 491",
         "regiao": "Oeste, distrito de Leiria, distrito de Lisboa, distrito de Santarém, Ribatejo, centro"
       },
       {
@@ -78,6 +80,8 @@ export default {
         "localidade": "Braga",
         "telefone": "913 215 096",
         "zonas": "Cidade de Braga",
+        "email": "comercial@amembalagens.pt",
+        "contacto": "Margarida / 913 215 096",
         "regiao": "Minho, distrito de Braga, norte"
       },
       {
@@ -85,6 +89,8 @@ export default {
         "localidade": "Aljustrel",
         "telefone": "284 601 288",
         "zonas": "Zona litoral entre Sines e V. N. Milfontes, Aljustrel, Beja e todo o Baixo Alentejo, zona entre Albufeira e Olhão",
+        "email": "biquimicos@grupobiquimicos.com",
+        "contacto": "Jorge Lopes / 938 134 855",
         "regiao": "Alentejo, Baixo Alentejo, Algarve, distrito de Beja, distrito de Faro, litoral alentejano, sul"
       },
       {
@@ -92,6 +98,8 @@ export default {
         "localidade": "Odemira",
         "telefone": "283 386 317",
         "zonas": "Zona litoral entre Sines e Aljezur, Odemira",
+        "email": "candeiasfilho@sapo.pt",
+        "contacto": "Carlos Candeias / 917 641 005",
         "regiao": "Alentejo, Costa Vicentina, litoral alentejano, distrito de Beja, sudoeste, sul"
       },
       {
@@ -99,6 +107,8 @@ export default {
         "localidade": "Campo de Besteiros",
         "telefone": "232 859 106",
         "zonas": "Santa Comba Dão, Tondela, Campo de Besteiros",
+        "email": "antoniocarrapico@centroagroavicola.pt",
+        "contacto": "Maria / 912 300 351",
         "regiao": "distrito de Viseu, Beiras, Dão, centro"
       },
       {
@@ -106,6 +116,8 @@ export default {
         "localidade": "Leiria",
         "telefone": "244 720 480",
         "zonas": "Leiria, Marinha Grande, Pombal, Batalha, Fátima, Coimbra",
+        "email": "geral@cordeiroecompanhia.pt",
+        "contacto": "Carina / 914 180 286",
         "regiao": "distrito de Leiria, distrito de Coimbra, centro, Pinhal Litoral"
       },
       {
@@ -113,6 +125,8 @@ export default {
         "localidade": "S. Brás de Alportel",
         "telefone": "965 099 514",
         "zonas": "Loulé, Faro, S. Brás de Alportel, Olhão, Almancil",
+        "email": "david.nicolau@sapo.pt",
+        "contacto": "David Nicolau / 965 099 514",
         "regiao": "Algarve, distrito de Faro, sotavento, sul"
       },
       {
@@ -120,6 +134,8 @@ export default {
         "localidade": "Penafiel",
         "telefone": "919 575 963",
         "zonas": "Penafiel e toda a zona do Vale do Sousa",
+        "email": "geral@fielgas.pt",
+        "contacto": "Joaquim Barbosa / 917 623 072",
         "regiao": "distrito do Porto, Vale do Sousa, norte"
       },
       {
@@ -127,6 +143,8 @@ export default {
         "localidade": "Mangualde",
         "telefone": "232 095 862",
         "zonas": "Mangualde",
+        "email": "encomendas@gascomb.pt",
+        "contacto": "232095862",
         "regiao": "distrito de Viseu, Beiras, Dão, centro"
       },
       {
@@ -134,6 +152,8 @@ export default {
         "localidade": "Castanheira do Ribatejo",
         "telefone": "263 299 111",
         "zonas": "Castanheira do Ribatejo, Vila Franca de Xira",
+        "email": "escrotorio.gasnunos@sapo.pt",
+        "contacto": "263299111",
         "regiao": "distrito de Lisboa, Ribatejo, grande Lisboa"
       },
       {
@@ -141,6 +161,8 @@ export default {
         "localidade": "Abrantes",
         "telefone": "241 372 988",
         "zonas": "Abrantes, Chamusca e parte do Pinhal Interior",
+        "email": "helena.amaral@gasunifod.pt",
+        "contacto": "Luis Miguel / 917 769 362",
         "regiao": "distrito de Santarém, Ribatejo, Médio Tejo, Pinhal Interior, centro"
       },
       {
@@ -148,6 +170,8 @@ export default {
         "localidade": "Póvoa de Varzim",
         "telefone": "912 515 870",
         "zonas": "Santa Maria da Feira, Porto e arredores, Vila Nova de Gaia, Póvoa de Varzim, Vila do Conde, todo o distrito de Braga",
+        "email": "sofia.campelo@impergas.pt",
+        "contacto": "Sofia Campelo / 252 683 226",
         "regiao": "norte, distrito do Porto, distrito de Braga, grande Porto, litoral norte, Minho"
       },
       {
@@ -155,6 +179,8 @@ export default {
         "localidade": "Viseu",
         "telefone": "232 929 100",
         "zonas": "São Pedro do Sul, Viseu, Mangualde",
+        "email": "clara.godinho@inforgas.pt",
+        "contacto": "Clara Godinho / 968 332 547",
         "regiao": "distrito de Viseu, Beiras, centro"
       },
       {
@@ -162,6 +188,8 @@ export default {
         "localidade": "Fundão",
         "telefone": "275 776 497",
         "zonas": "Manteigas, Belmonte, Covilhã e Fundão",
+        "email": "fatima.raposo@inforgas.pt",
+        "contacto": "Fátima Raposo / 275 445 497",
         "regiao": "distrito de Castelo Branco, Beira Baixa, Cova da Beira, Serra da Estrela, centro"
       },
       {
@@ -169,6 +197,8 @@ export default {
         "localidade": "Castelo Branco",
         "telefone": "272 345 580",
         "zonas": "Castelo Branco e arredores",
+        "email": "marina.goncalves@inforgas.pt",
+        "contacto": "Marina Goncalves / 915 134 073",
         "regiao": "distrito de Castelo Branco, Beira Baixa, centro"
       },
       {
@@ -176,6 +206,8 @@ export default {
         "localidade": "Sátão",
         "telefone": "966 968 382",
         "zonas": "Sátão, Vila Nova de Paiva, Aguiar da Beira",
+        "email": "jogas-satao@hotmail.com",
+        "contacto": "Jorge Costa / 966 968 382",
         "regiao": "distrito de Viseu, Beiras, centro"
       },
       {
@@ -183,6 +215,8 @@ export default {
         "localidade": "Coimbra",
         "telefone": "917 566 575",
         "zonas": "Mealhada, Coimbra e arredores",
+        "email": "geral@klotgas.pt",
+        "contacto": "Vasconcelos / 919 550 816",
         "regiao": "distrito de Coimbra, Bairrada, centro"
       },
       {
@@ -190,6 +224,8 @@ export default {
         "localidade": "Almada",
         "telefone": "933 283 424",
         "zonas": "Lisboa, Almada, Seixal, Costa de Caparica, Odivelas",
+        "email": "luismfoliveira74@gmail.com",
+        "contacto": "Luis Oliveira / 933283424",
         "regiao": "grande Lisboa, distrito de Lisboa, distrito de Setúbal, margem sul, península de Setúbal"
       },
       {
@@ -197,6 +233,8 @@ export default {
         "localidade": "Oliveira de Azeméis",
         "telefone": "917 683 235",
         "zonas": "Oliveira de Azeméis, Porto, Vila Nova de Gaia, distrito de Aveiro",
+        "email": "manuelsrs6@gmail.com",
+        "contacto": "Manuel Soares / 917 683 235",
         "regiao": "distrito de Aveiro, distrito do Porto, grande Porto, norte"
       },
       {
@@ -204,6 +242,8 @@ export default {
         "localidade": "Setúbal",
         "telefone": "968 809 012",
         "zonas": "Setúbal, Palmela e todo o litoral entre Troia e Vila Nova de Milfontes",
+        "email": "materia.ramos@gmail.com",
+        "contacto": "Rui Ramos / 968 732 754",
         "regiao": "distrito de Setúbal, península de Setúbal, litoral alentejano, Alentejo, sul"
       },
       {
@@ -211,6 +251,8 @@ export default {
         "localidade": "Loures",
         "telefone": "219 891 137",
         "zonas": "Lisboa, linha de Sintra, linha de Cascais, Loures, Odivelas, Malveira, margem sul do Tejo até Corroios",
+        "email": "daniel.rodrigues@packfilm.pt",
+        "contacto": "Daniel Rodrigues / 912 221 948",
         "regiao": "grande Lisboa, distrito de Lisboa, margem sul, Sintra, Cascais"
       },
       {
@@ -218,6 +260,8 @@ export default {
         "localidade": "Fajões",
         "telefone": "256 842 176",
         "zonas": "Todo o distrito de Aveiro",
+        "email": "rui.santos@grupo-ps.pt",
+        "contacto": "Rui Santos / 913 383 844",
         "regiao": "distrito de Aveiro, Entre Douro e Vouga, norte, centro"
       },
       {
@@ -225,6 +269,8 @@ export default {
         "localidade": "Vila Praia de Âncora",
         "telefone": "964 585 573",
         "zonas": "Vila Praia de Âncora e todo o distrito de Viana do Castelo",
+        "email": "info@quebrarco.com",
+        "contacto": "Pedro / 964 585 573",
         "regiao": "Minho, distrito de Viana do Castelo, Alto Minho, norte"
       },
       {
@@ -232,6 +278,8 @@ export default {
         "localidade": "Bragança",
         "telefone": "273 312 841",
         "zonas": "Bragança",
+        "email": "comercial01@reconco.pt",
+        "contacto": "Fabio Domingues / 933 037 309",
         "regiao": "Trás-os-Montes, distrito de Bragança, nordeste, norte"
       },
       {
@@ -239,6 +287,8 @@ export default {
         "localidade": "Silves",
         "telefone": "282 443 782",
         "zonas": "Portimão, Alvor, Lagos, Silves, Monchique e toda a zona até Albufeira",
+        "email": "geral@sequeiraeduarte.pt",
+        "contacto": "Carlos Sequeira / 966 958 368",
         "regiao": "Algarve, distrito de Faro, barlavento, sul"
       },
       {
@@ -246,6 +296,8 @@ export default {
         "localidade": "Loures",
         "telefone": "219 407 570",
         "zonas": "Toda a cidade de Lisboa, zona norte de Lisboa até Alverca, Loures, Odivelas",
+        "email": "ja.silva@rubisenergia.pt",
+        "contacto": "João Silva / 915 758 265",
         "regiao": "grande Lisboa, distrito de Lisboa"
       },
       {
@@ -253,6 +305,8 @@ export default {
         "localidade": "Tábua",
         "telefone": "235 413 148",
         "zonas": "Tábua",
+        "email": "geral@supermaco.pt",
+        "contacto": "João / 961 268 569",
         "regiao": "distrito de Coimbra, Beira Serra, centro"
       },
       {
@@ -260,6 +314,8 @@ export default {
         "localidade": "Ourém",
         "telefone": "249 542 290",
         "zonas": "Ourém, Fátima",
+        "email": "oureana.geral@sapo.pt",
+        "contacto": "Rui Ferreira / 919 359 765",
         "regiao": "distrito de Santarém, Fátima, Médio Tejo, centro"
       },
       {
@@ -267,14 +323,63 @@ export default {
         "localidade": "Lagos",
         "telefone": "966 616 858",
         "zonas": "Toda a zona entre Sagres e Portimão",
+        "email": "guilhermecasinha1@gmail.com",
+        "contacto": "Guilherme Casinha / 966 616 858",
         "regiao": "Algarve, distrito de Faro, barlavento, Costa Vicentina, sul"
       },
       {
         "nome": "JDA Gás Unip. Lda",
         "localidade": "Guarda",
         "telefone": "271 082 220",
-        "zonas": "Cidade da Guarda e arredores",
+        "zonas": "Cidade da Guarda e arredores + Sabugal",
+        "email": "jdagas.loja@gmail.com",
+        "contacto": "David / 927 967 898",
         "regiao": "distrito da Guarda, Beira Interior, Serra da Estrela, centro"
+      },
+      {
+        "nome": "Charrua do Mondego",
+        "localidade": "Penacova",
+        "telefone": "969 748 391",
+        "zonas": "Penacova",
+        "email": "charruadomondego@gmail.com",
+        "contacto": "969 748 391",
+        "regiao": "distrito de Coimbra, Vale do Mondego, Beira Litoral, centro"
+      },
+      {
+        "nome": "Agro-Penacovense",
+        "localidade": "Penacova",
+        "telefone": "916 137 278",
+        "zonas": "Penacova",
+        "email": "agro-penacovense@sapo.pt",
+        "contacto": "Nuno Luis / 916 137 278",
+        "regiao": "distrito de Coimbra, Vale do Mondego, Beira Litoral, centro"
+      },
+      {
+        "nome": "Bruno Trindade (Frutyalva)",
+        "localidade": "São Pedro d'Alva",
+        "telefone": "962 304 195",
+        "zonas": "São Pedro d'Alva",
+        "email": "frutyalva@gmail.com",
+        "contacto": "Bruno / 962 304 195",
+        "regiao": "distrito de Coimbra, Tábua, Vale do Alva, centro"
+      },
+      {
+        "nome": "Agropet Pampilhosa",
+        "localidade": "Pampilhosa",
+        "telefone": "910 182 276",
+        "zonas": "Pampilhosa",
+        "email": "pampilhosaagropet@gmail.com",
+        "contacto": "Sónia / 910 182 276",
+        "regiao": "distrito de Aveiro, Mealhada, Bairrada, centro"
+      },
+      {
+        "nome": "Bricopesca",
+        "localidade": "Vila Nova de Poiares",
+        "telefone": "912 918 929",
+        "zonas": "Vila Nova de Poiares",
+        "email": "bricopescapoiares@hotmail.com",
+        "contacto": "912 918 929",
+        "regiao": "distrito de Coimbra, Vale do Ceira, centro"
       }
     ],
     "marcaPropriaAldi": "IMPORTANTE: no Aldi, o produto NÃO leva a marca EKOOLOGY — é vendido com a marca própria do Aldi (carvão biológico BBQ), produzido pela KoolNature em Penacova. Mesma acácia, mesma pirólise lenta, mesmas certificações."
