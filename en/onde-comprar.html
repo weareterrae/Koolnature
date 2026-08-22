@@ -140,9 +140,17 @@ window.addEventListener("error", function (e) {
   <div class="wrap base">EKOOLOGY® is the charcoal brand of the KoolNature project, produced in Penacova by Aleatory Concept, Lda. · FSC® C150535 · WWF Portugal partner (ANP) · © 2026</div>
 <div style="text-align:center;font-size:12px;line-height:1.5;opacity:.6;padding:12px 12px 2px">Site por <a href="https://numerocinco.pt" target="_blank" rel="noopener" style="color:inherit">Nº&nbsp;5</a></div></footer>
 
-<script src="../js/pontos-venda-dados.js" defer></script>
-<script src="../js/pontos-venda-v2.js" defer></script>
-<script src="../js/mapa-distribuidores.js" defer></script>
+<script>
+function avisaFalhaCarregamento(nome) {
+  var d = document.createElement("div");
+  d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#c0392b;color:#fff;font:12px/1.4 monospace;padding:10px;white-space:pre-wrap;max-height:45vh;overflow:auto";
+  d.textContent = "FALHOU A CARREGAR: " + nome;
+  document.documentElement.appendChild(d);
+}
+</script>
+<script src="../js/pontos-venda-dados.js" defer onerror="avisaFalhaCarregamento('js/pontos-venda-dados.js')"></script>
+<script src="../js/pontos-venda-v2.js" defer onerror="avisaFalhaCarregamento('js/pontos-venda-v2.js')"></script>
+<script src="../js/mapa-distribuidores.js" defer onerror="avisaFalhaCarregamento('js/mapa-distribuidores.js')"></script>
 <script src="../js/brasa-dados-en.js" defer></script>
 <script src="../js/site.js" defer></script>
 <script src="../js/mestre-kool.js" defer></script>
