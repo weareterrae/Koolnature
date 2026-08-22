@@ -58,6 +58,7 @@
           '<div class="pv-local">📍 ' + p.localidade + "</div>" +
           '<p class="pv-zonas">' + T.zonas + p.zonas + "</p>" +
           '<a class="pv-tel" href="tel:+351' + p.telefone.replace(/\s/g, "") + '">📞 ' + p.telefone + "</a>" +
+          (p.email ? '<a class="pv-email" href="mailto:' + p.email + '">✉️ ' + p.email + "</a>" : "") +
         "</div>"
       );
     }).join("");

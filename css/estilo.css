@@ -646,6 +646,8 @@ footer .base { border-top: 1px solid rgba(255, 255, 255, 0.12); margin-top: 44px
 .pv-zonas { color: var(--ink-2); font-size: 13.5px; line-height: 1.5; margin: 0 0 10px; }
 .pv-tel { display: inline-block; color: var(--brasa); font-weight: 700; font-size: 14.5px; text-decoration: none; }
 .pv-tel:hover { text-decoration: underline; }
+.pv-email { display: block; margin-top: 4px; color: var(--ink-2); font-size: 13px; text-decoration: none; }
+.pv-email:hover { text-decoration: underline; color: var(--azul); }
 .pv-vazio { text-align: center; padding: 26px 0 6px; color: var(--ink-2); }
 .pv-vazio p { max-width: 52ch; margin: 0 auto 18px; }
 

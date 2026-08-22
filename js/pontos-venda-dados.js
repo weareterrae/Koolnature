@@ -6,8 +6,9 @@
    correr node exporta-conhecimento.mjs no scratchpad e fazer deploy.
    REGRA DO NUNO: localidade que não conste aqui → pedir contacto por
    email (info@koolnature.pt) ou telemóvel (+351 925 969 526).
-   Campos email/contacto: alimentam SÓ o conhecimento do Chef Kool (não
-   aparecem nos cartões públicos do diretório — ver js/pontos-venda.js). */
+   Campo email: aparece também no cartão público do diretório (js/pontos-venda.js).
+   Campo contacto (nome pessoal + telemóvel direto): alimenta SÓ o conhecimento
+   do Chef Kool — não aparece no diretório público, por privacidade. */
 window.PONTOS_VENDA = [
   {
     "nome": "A. Marques Lda",
