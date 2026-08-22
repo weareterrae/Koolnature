@@ -5,6 +5,60 @@
 
 import CONHECIMENTO from "./lib/conhecimento.mjs";
 
+// ---------------------------------------------------------------------
+// N5 AI Gateway — migração progressiva
+// ---------------------------------------------------------------------
+// O gateway decide se serve este pedido (percentagem no painel AI
+// Operations, sem deploy). Se recusar ou falhar, seguimos pelo caminho
+// antigo — o visitante nunca fica sem resposta.
+const N5_GATEWAY_URL = process.env.N5_GATEWAY_URL;
+const N5_ASSISTANT_KEY = process.env.N5_ASSISTANT_KEY || "koolnature-chefkool";
+
+async function n5Gateway(messages, { lang, origin, sessionId, system } = {}) {
+  if (!N5_GATEWAY_URL || !N5_ASSISTANT_KEY) return null;
+  try {
+    const r = await fetch(N5_GATEWAY_URL, {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: origin || "" },
+      body: JSON.stringify({
+        assistant_key: N5_ASSISTANT_KEY,
+        session_id: sessionId,
+        messages,
+        lang,
+        ...(system ? { system } : {}),
+      }),
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!r.ok || !r.body) return null;
+
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = "", texto = "", erro = null;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const linhas = buf.split(String.fromCharCode(10));
+      buf = linhas.pop() ?? "";
+      for (const l of linhas) {
+        const t = l.trim();
+        if (!t.startsWith("data:")) continue;
+        try {
+          const ev = JSON.parse(t.slice(5).trim());
+          if (ev.type === "delta") texto += ev.text;
+          else if (ev.type === "error") erro = ev.code;
+        } catch { /* fragmento incompleto */ }
+      }
+    }
+    // 'rollout_excluded' é resposta normal, não avaria: este pedido não
+    // pertence à fatia migrada.
+    if (erro || !texto.trim()) return null;
+    return texto;
+  } catch {
+    return null;
+  }
+}
+
 const SYSTEM = `És o Chef Kool 👨‍🍳🔥 — o chef de brasa oficial da EKOOLOGY, a marca de biocarvão da KoolNature (Aleatory Concept, Lda), de Penacova, Portugal.
 
 COMO FALAS
@@ -271,8 +325,11 @@ export default async (req, context) => {
   const inicio = Date.now();
   const prazoGemini = inicio + GEMINI_BUDGET_MS;
   const prazoTotal = inicio + DEADLINE_MS;
-  let r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // principal: Gemini
-  const viaGemini = !!r;
+  // N5 AI Gateway primeiro; o caminho antigo fica como rede.
+  let r = await n5Gateway(mensagens, { origin: req.headers.get("origin") || "https://koolnature.pt" });
+  const viaN5 = !!r;
+  if (!r) r = await planoBGemini(SYSTEM, mensagens, 600, prazoGemini);   // reserva 1: Gemini
+  const viaGemini = !viaN5 && !!r;
   // Rede de segurança com resposta curta (320 tokens): medido ao vivo, é o que cabe
   // com folga na janela (380 já abortava no teto em noites lentas do gateway).
   // O corte a meio de frase é aparado no redeClaude (termina na última frase completa).
@@ -280,7 +337,7 @@ export default async (req, context) => {
   // Diagnóstico só a pedido (corpo.debug=true): não expõe nada sensível, ajuda a ver
   // por onde passou o pedido quando a resposta cai na contingência.
   const extra = corpo?.debug === true
-    ? { debug: { viaGemini, temClaudeKey: !!process.env.ANTHROPIC_API_KEY, ms: Date.now() - inicio } }
+    ? { debug: { viaN5, viaGemini, temClaudeKey: !!process.env.ANTHROPIC_API_KEY, ms: Date.now() - inicio } }
     : {};
   return json({ resposta: r || CONTINGENCIA, ...extra });
 };
