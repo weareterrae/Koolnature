@@ -13,9 +13,12 @@
   if (!alvo || !window.PONTOS_VENDA) return;
 
   var EN = document.documentElement.lang === "en" || location.pathname.includes("/en/");
-  var svgUrl = EN ? "../assets/mapa-distribuidores.svg" : "assets/mapa-distribuidores.svg";
+  var ES = document.documentElement.lang === "es-ES" || location.pathname.includes("/es/");
+  var svgUrl = (EN || ES) ? "../assets/mapa-distribuidores.svg" : "assets/mapa-distribuidores.svg";
   var T = EN
     ? { titulo: function (n) { return n + (n === 1 ? " distributor" : " distributors"); }, legenda: "Each dot is a district where the Kool is already within reach." }
+    : ES
+    ? { titulo: function (n) { return n + (n === 1 ? " distribuidor" : " distribuidores"); }, legenda: "Cada punto es un distrito portugués donde ya tienes la Kool a mano." }
     : { titulo: function (n) { return n + (n === 1 ? " distribuidor" : " distribuidores"); }, legenda: "Cada ponto é um distrito onde já tens a Kool à mão." };
 
   fetch(svgUrl)

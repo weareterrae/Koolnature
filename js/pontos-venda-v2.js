@@ -31,6 +31,7 @@
   function iniciar() {
 
   var EN = document.documentElement.lang === "en" || location.pathname.includes("/en/");
+  var ES = document.documentElement.lang === "es-ES" || location.pathname.includes("/es/");
   var T = EN ? {
     placeholder: "Type your town or region (e.g. Braga, Algarve)…",
     aria: "Search for a point of sale",
@@ -39,6 +40,14 @@
     zonas: "Areas covered: ",
     semResultados: "We couldn't find a distributor for that area — yet! Talk to us and we'll point you to the nearest one (or get one there):",
     ligar: "Call",
+  } : ES ? {
+    placeholder: "Escribe tu localidad o zona (ej.: Braga, Algarve)…",
+    aria: "Buscar punto de venta",
+    resultados: function (n) { return n + (n === 1 ? " distribuidor encontrado" : " distribuidores encontrados"); },
+    todos: "Nuestra red de distribuidores en Portugal, de norte a sur:",
+    zonas: "Zonas cubiertas: ",
+    semResultados: "Todavía no encontramos un distribuidor para esa zona. Habla con nosotros y te indicamos el más cercano:",
+    ligar: "Llamar",
   } : {
     placeholder: "Escreve a tua terra ou zona (ex.: Braga, Algarve)…",
     aria: "Pesquisar ponto de venda",

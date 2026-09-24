@@ -3,8 +3,10 @@
    Se a IA não estiver disponível, cai no motor de regras local — nunca falha. */
 
 (function () {
-  /* língua da página (EN nas páginas /en/) */
+  /* língua da página (EN nas páginas /en/, ES nas páginas /es/) */
   const EN = document.documentElement.lang === "en" || location.pathname.includes("/en/");
+  const ES = document.documentElement.lang === "es-ES" || location.pathname.includes("/es/");
+  const NAO_PT = EN || ES;
   const W = EN ? {
     sub: "Your fire chef · EKOOLOGY",
     ola: "Hi! 👋 I'm Chef Kool, your fire chef. Ask me about grilling times, charcoal amounts, internal temperatures or fire tricks.",
@@ -16,6 +18,17 @@
     teaserTitulo: "Chef Kool",
     teaserTexto: "Hi! 👋 Grilling questions? Times, charcoal amounts, temperatures — ask me anything.",
     teaserFechar: "Dismiss",
+  } : ES ? {
+    sub: "Tu chef de brasa · EKOOLOGY",
+    ola: "¡Hola! 👋 Soy el Chef Kool. Pregúntame tiempos de parrilla, cantidades de carbón o trucos de brasa.",
+    sugestoes: ["¿Cuánto carbón para 8 personas?", "Lubina: ¿temperatura interna?", "¿Puntos de la carne?"],
+    placeholder: "Escribe tu pregunta…",
+    aria: "Pregunta al Chef Kool",
+    abrir: "Abrir el Chef Kool",
+    fallback: "¡Buena pregunta! Sin conexión solo conozco lo esencial (tiempos, cantidades, cómo encender, dónde comprar). El Manual del Parrillero completo aquí en la web lo tiene todo. 🔥",
+    teaserTitulo: "Chef Kool",
+    teaserTexto: "¡Hola! 👋 ¿Dudas de parrilla? Tiempos, cantidades de carbón, temperaturas: pregúntame lo que quieras.",
+    teaserFechar: "Cerrar",
   } : {
     sub: "O teu chef de brasa · EKOOLOGY",
     ola: "Olá! 👋 Sou o Chef Kool. Pergunta-me tempos de grelha, quantidades de carvão ou truques de brasa.",
@@ -108,7 +121,7 @@
     "Essa pergunta merece melhor resposta do que a que te consigo dar agora! 😅 Neste momento estou no essencial da brasa: tempos, quantidades, como acender, onde comprar. Espreita o Manual do Grelhador aqui no site — está lá tudo, com tabelas e truques de chef. E volta a perguntar-me daqui a nada! 🔥";
 
   function responder(txt) {
-    if (EN) return W.fallback;
+    if (NAO_PT) return W.fallback;
     const temp = respondeTemperatura(txt);
     if (temp) return temp;
     for (const r of REGRAS) if (r.re.test(txt)) return r.resp;
@@ -188,6 +201,8 @@
   const MAX_MSG = 30;
   const contactoHumano = EN
     ? "We've chatted quite a bit! 🔥 For anything more, write to info@koolnature.pt or call +351 925 969 526 — the team replies fast."
+    : ES
+    ? "¡Ya hemos hablado bastante! 🔥 Para cualquier otra cosa, escribe a info@koolnature.pt o llama al +351 925 969 526: el equipo responde rápido."
     : "Já demos uma boa conversa! 🔥 Para o que precisares mais, escreve para info@koolnature.pt ou liga +351 925 969 526 — a equipa responde depressa.";
 
   // dispara um evento GA4 (só se houver consentimento/gtag; ver js/site.js)
@@ -201,11 +216,11 @@
       nome: (nome || "").slice(0, 120),
       contacto: (contacto || "").slice(0, 120),
       interesse: (interesse || "OndeComprar").slice(0, 40),
-      idioma: EN ? "EN" : "PT",
+      idioma: EN ? "EN" : ES ? "ES" : "PT",
       pagina: location.pathname,
     });
     fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: corpo.toString() })
-      .then(function () { ev("lead_assistente", { interesse: interesse || "OndeComprar", idioma: EN ? "EN" : "PT" }); })
+      .then(function () { ev("lead_assistente", { interesse: interesse || "OndeComprar", idioma: EN ? "EN" : ES ? "ES" : "PT" }); })
       .catch(function () {}); // se falhar a submissão, não estraga a conversa
   }
 

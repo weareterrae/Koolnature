@@ -196,14 +196,18 @@
   var PIXEL_ID = '1049281487617183'; // Meta Pixel "KoolNature Web" (portefólio Ekoology Biologic Charcoal)
 
   var EN = document.documentElement.lang === 'en' || location.pathname.indexOf('/en/') > -1;
+  var ES = document.documentElement.lang === 'es-ES' || location.pathname.indexOf('/es/') > -1;
   var T = EN ? {
     txt: 'We use analytics cookies (Google Analytics and Metricool) to understand visits — nothing else. ',
     mais: 'Privacy policy', sim: 'Accept', nao: 'Decline',
+  } : ES ? {
+    txt: 'Usamos cookies analíticas (Google Analytics y Metricool) para entender las visitas, nada más. ',
+    mais: 'Política de privacidad', sim: 'Aceptar', nao: 'Rechazar',
   } : {
     txt: 'Usamos cookies analíticos (Google Analytics e Metricool) para perceber as visitas — mais nada. ',
     mais: 'Política de privacidade', sim: 'Aceitar', nao: 'Recusar',
   };
-  var priv = EN ? '../privacidade.html' : 'privacidade.html';
+  var priv = (EN || ES) ? '../privacidade.html' : 'privacidade.html';
 
   // dataLayer + gtag existem sempre; Consent Mode v2 arranca em "denied"
   window.dataLayer = window.dataLayer || [];
@@ -248,7 +252,7 @@
     var d = document.createElement('div');
     d.id = 'kn-cookies';
     d.setAttribute('role', 'dialog');
-    d.setAttribute('aria-label', EN ? 'Cookie notice' : 'Aviso de cookies');
+    d.setAttribute('aria-label', EN ? 'Cookie notice' : ES ? 'Aviso de cookies' : 'Aviso de cookies');
     d.innerHTML = '<p>' + T.txt + '<a href="' + priv + '">' + T.mais + '</a></p>' +
       '<div><button type="button" data-v="nao">' + T.nao + '</button>' +
       '<button type="button" class="sim" data-v="sim">' + T.sim + '</button></div>';
