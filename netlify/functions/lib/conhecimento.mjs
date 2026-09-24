@@ -382,7 +382,23 @@ export default {
         "regiao": "distrito de Coimbra, Vale do Ceira, centro"
       }
     ],
-    "marcaPropriaAldi": "IMPORTANTE: no Aldi, o produto NÃO leva a marca EKOOLOGY — é vendido com a marca própria do Aldi (carvão biológico BBQ), produzido pela KoolNature em Penacova. Mesma acácia, mesma pirólise lenta, mesmas certificações."
+    "marcaPropriaAldi": "IMPORTANTE: no Aldi, o produto NÃO leva a marca EKOOLOGY — é vendido com a marca própria do Aldi (carvão biológico BBQ), produzido pela KoolNature em Penacova. Mesma acácia, mesma pirólise lenta, mesmas certificações.",
+    "distribuidorEspanha": {
+      "nome": "ESAFERAL S.L.U.",
+      "localidade": "Bembibre (León), Espanha",
+      "contacto": "Marcelino Alonso",
+      "telefone": "+34 671 406 899",
+      "email": "info@esaferal.com",
+      "nota": "Distribuidor oficial EKOOLOGY em Espanha."
+    },
+    "campanhaDistribuidorMadeiraAcores": {
+      "situacao": "A EKOOLOGY NÃO tem, neste momento, nenhum distribuidor na Madeira nem nos Açores. Há uma campanha ativa (2026) a angariar um distribuidor exclusivo para cada uma destas duas regiões.",
+      "contactoDaCampanha": "Nuno Cabral",
+      "telefone": "+351 961 323 740",
+      "email": "nuno.cabral@koolnature.pt",
+      "pagina": "koolnature.pt/distribuidor-madeira-acores.html",
+      "regraImportante": "Se alguém disser que é da Madeira ou dos Açores e perguntar onde comprar, ou disser que quer ser distribuidor/revendedor nessas regiões, NÃO encaminhar para o info@koolnature.pt geral nem para a lista de distribuidores do continente (não há nenhum lá). Encaminhar SEMPRE para o Nuno Cabral (nome, telefone e email acima) e para a página da campanha."
+    }
   },
   "quantidadeCarvao": [
     {

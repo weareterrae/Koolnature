@@ -76,6 +76,10 @@
 
   const REGRAS = [
     {
+      re: /(madeira|a[cç]ores|a[cç]oriano).*(distribui|revend|vender)|(distribui|revend).*(madeira|a[cç]ores)/i,
+      resp: "Boa! Ainda não temos distribuidor nem na Madeira nem nos Açores, e temos uma campanha a decorrer mesmo para isso. 🏝️ Fala com o Nuno Cabral: +351 961 323 740 ou nuno.cabral@koolnature.pt. Tens todos os detalhes em koolnature.pt/distribuidor-madeira-acores.html",
+    },
+    {
       re: /(quant[oa].*(carv|bio).*|carv[aã]o.*(pessoas|preciso|quanto))/i,
       resp: "Boa pergunta — ninguém gosta de ficar sem brasa a meio da festa! 🔥 A minha regra prática com EKOOLOGY:\n• 2–4 pessoas → ~1,5 kg (meio saco de 15 dm³)\n• 5–8 pessoas → ~3 kg (um saco de 15 dm³)\n• 9–15 pessoas → ~5 kg\nE atenção: como rende mais 20–30% que o carvão tradicional, vais gastar menos do que estás habituado. Boa grelhada!",
     },
