@@ -394,10 +394,10 @@ export default {
     "campanhaDistribuidorMadeiraAcores": {
       "situacao": "A EKOOLOGY NÃO tem, neste momento, nenhum distribuidor na Madeira nem nos Açores. Há uma campanha ativa (2026) a angariar um distribuidor exclusivo para cada uma destas duas regiões.",
       "contactoDaCampanha": "Nuno Cabral",
-      "telefone": "+351 961 323 740",
-      "email": "nuno.cabral@koolnature.pt",
+      "telefoneNuncaConfundirComOGeral": "+351 961 323 740",
+      "emailNuncaConfundirComOGeral": "nuno.cabral@koolnature.pt",
       "pagina": "koolnature.pt/distribuidor-madeira-acores.html",
-      "regraImportante": "Se alguém disser que é da Madeira ou dos Açores e perguntar onde comprar, ou disser que quer ser distribuidor/revendedor nessas regiões, NÃO encaminhar para o info@koolnature.pt geral nem para a lista de distribuidores do continente (não há nenhum lá). Encaminhar SEMPRE para o Nuno Cabral (nome, telefone e email acima) e para a página da campanha."
+      "regraImportante": "Se alguém disser que é da Madeira ou dos Açores e perguntar onde comprar, ou disser que quer ser distribuidor/revendedor nessas regiões, NÃO encaminhar para o info@koolnature.pt geral nem para o telefone +351 925 969 526 (esse é o contacto GERAL da marca, usado para todo o resto). Encaminhar SEMPRE para o Nuno Cabral, usando EXATAMENTE +351 961 323 740 e nuno.cabral@koolnature.pt (campos acima), e para a página da campanha."
     }
   },
   "quantidadeCarvao": [
